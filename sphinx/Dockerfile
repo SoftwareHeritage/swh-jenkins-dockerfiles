@@ -11,6 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     python3-recommonmark \
     libffi-dev \
     inkscape \
+	dia \
 	myrepos \
 	make && \
   rm -rf /var/lib/apt/lists/*
