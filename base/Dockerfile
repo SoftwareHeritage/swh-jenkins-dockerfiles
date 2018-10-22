@@ -21,7 +21,7 @@ RUN apt-get update && \
     apt-get install -y \
 	  postgresql-10 \
 	  postgresql-client-10 \
-	  libpq-dev \
+	  postgresql-server-dev-10 \
 	  arcanist && \
 	rm -rf /var/lib/apt/lists/*
 
