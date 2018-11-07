@@ -12,7 +12,8 @@ RUN apt-get update && \
     python3-pip \
     python3-venv libsvn-dev \
     libsystemd-dev \
-    pkg-config
+    pkg-config \
+    jq
 
 # install postgresql 10
 RUN echo deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main > /etc/apt/sources.list.d/postgres.list
