@@ -13,6 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     libffi-dev \
     inkscape \
     dia \
+    plantuml \
     myrepos \
     make && \
   rm -rf /var/lib/apt/lists/*
