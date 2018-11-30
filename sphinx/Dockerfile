@@ -12,6 +12,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     dia \
     plantuml \
     myrepos \
+    crudini \
     make && \
   rm -rf /var/lib/apt/lists/*
 
