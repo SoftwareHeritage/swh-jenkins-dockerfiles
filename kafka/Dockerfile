@@ -22,6 +22,8 @@ RUN wget http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION
     tar xvf ${TARBALL} -C /opt && \
     ln -s /opt/${KAFKA_APP} /opt/kafka && \
     chown -R jenkins: /opt/kafka &&
-    rm ${CHECKSUMS} ${TARBALL}
 
+FROM $REGISTRY/tox
+WORKDIR /opt
+COPY --from=0 /opt/ .
 USER jenkins
