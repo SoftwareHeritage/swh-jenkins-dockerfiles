@@ -20,10 +20,11 @@ RUN wget http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION
     ( echo "${KAFKA_SHA512SUM}  ${TARBALL}" > ${CHECKSUMS} ) && \
     sha512sum -c ${CHECKSUMS} && \
     tar xvf ${TARBALL} -C /opt && \
-    ln -s /opt/${KAFKA_APP} /opt/kafka && \
-    chown -R jenkins: /opt/kafka &&
+    ln -s /opt/${KAFKA_APP} /opt/kafka
 
 FROM $REGISTRY/tox
+USER root
 WORKDIR /opt
 COPY --from=0 /opt/ .
+RUN chown -R jenkins: /opt/${KAFKA_APP} /opt/kafka
 USER jenkins
