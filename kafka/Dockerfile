@@ -1,5 +1,5 @@
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/tox
+FROM $REGISTRY/tox as kafka_fetcher
 
 USER root
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
@@ -25,6 +25,6 @@ RUN wget http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION
 FROM $REGISTRY/tox
 USER root
 WORKDIR /opt
-COPY --from=0 /opt/ .
+COPY --from=kafka_fetcher /opt/ .
 RUN chown -R jenkins: /opt/${KAFKA_APP} /opt/kafka
 USER jenkins
