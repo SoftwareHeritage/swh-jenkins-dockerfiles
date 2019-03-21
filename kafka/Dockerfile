@@ -19,7 +19,7 @@ ARG CHECKSUMS=${TARBALL}.sha512
 RUN wget -q http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION}/${TARBALL} && \
     ( echo "${KAFKA_SHA512SUM}  ${TARBALL}" > ${CHECKSUMS} ) && \
     sha512sum -c ${CHECKSUMS} && \
-    tar xvf ${TARBALL} -C /opt && \
+    tar xf ${TARBALL} -C /opt && \
     ln -s /opt/${KAFKA_APP} /opt/kafka
 
 FROM $REGISTRY/tox
