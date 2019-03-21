@@ -16,7 +16,7 @@ ARG TARBALL=${KAFKA_APP}.tgz
 ARG KAFKA_SHA512SUM=a2e8168e8de6b45e8fca1f2883f0744d3c5a939b70d8a47a5428b72188501d4c2fc11bc35759f2392680d4e8ecf2fa9d0e518e77fd28393afba22194ad018b10
 ARG CHECKSUMS=${TARBALL}.sha512
 
-RUN wget http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION}/${TARBALL} && \
+RUN wget -q http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION}/${TARBALL} && \
     ( echo "${KAFKA_SHA512SUM}  ${TARBALL}" > ${CHECKSUMS} ) && \
     sha512sum -c ${CHECKSUMS} && \
     tar xvf ${TARBALL} -C /opt && \
