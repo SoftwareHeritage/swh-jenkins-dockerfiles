@@ -26,6 +26,6 @@ FROM $REGISTRY/tox
 USER root
 WORKDIR /opt
 COPY --from=kafka_fetcher /opt/ .
-RUN chown -R jenkins: /opt/${KAFKA_APP} /opt/kafka
+RUN chown -R jenkins: /opt/
 USER jenkins
 ENV SWH_KAFKA_ROOT=/opt/${KAFKA_APP}
