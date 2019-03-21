@@ -28,4 +28,4 @@ WORKDIR /opt
 COPY --from=kafka_fetcher /opt/ .
 RUN chown -R jenkins: /opt/
 USER jenkins
-ENV SWH_KAFKA_ROOT=/opt/${KAFKA_APP}
+ENV SWH_KAFKA_ROOT=/opt/kafka
