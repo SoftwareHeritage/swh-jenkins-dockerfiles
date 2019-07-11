@@ -18,3 +18,5 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 USER jenkins
+
+RUN python3 -m pip install --user --no-warn-script-location pyarcanist
