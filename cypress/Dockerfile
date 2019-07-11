@@ -19,4 +19,4 @@ RUN \
 
 USER jenkins
 
-RUN python3 -m pip install --user --no-warn-script-location pyarcanist
+RUN python3 -m pip install --user pyarcanist
