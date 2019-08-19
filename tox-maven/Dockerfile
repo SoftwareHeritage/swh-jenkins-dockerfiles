@@ -1,9 +1,6 @@
 ARG REGISTRY=swh-jenkins
 FROM $REGISTRY/base-jdk11
 LABEL maintainer="SoftwareHeritage"
-USER root
-
-RUN apt-get 
 
 USER jenkins
 
