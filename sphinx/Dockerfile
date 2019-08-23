@@ -4,17 +4,17 @@ FROM $REGISTRY/base
 USER root
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
   apt-get install -y --no-install-recommends \
-    tox \
-    graphviz \
-    postgresql-autodoc \
-    libffi-dev \
-    inkscape \
-    dia \
-    plantuml \
-    myrepos \
     crudini \
+    dia \
+    graphviz \
+    inkscape \
+    libffi-dev \
+    make \
+    myrepos \
+    plantuml \
+    postgresql-autodoc \
     rsync \
-    make && \
-  rm -rf /var/lib/apt/lists/*
+    tox \
+  && rm -rf /var/lib/apt/lists/*
 
 USER jenkins
