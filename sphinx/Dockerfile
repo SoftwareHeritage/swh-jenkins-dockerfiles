@@ -9,6 +9,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     graphviz \
     inkscape \
     libffi-dev \
+    maven \
     make \
     myrepos \
     plantuml \
