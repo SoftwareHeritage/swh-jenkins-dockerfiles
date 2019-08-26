@@ -1,5 +1,5 @@
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/base
+FROM $REGISTRY/base-jdk11
 
 USER root
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
