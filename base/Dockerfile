@@ -22,6 +22,7 @@ RUN \
     build-essential \
     curl \
     jq \
+    libffi-dev \
     libsvn-dev \
     libsystemd-dev \
     pkg-config \
