@@ -1,5 +1,5 @@
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/base-jdk11
+FROM $REGISTRY/base-buster
 LABEL maintainer="SoftwareHeritage"
 
 USER jenkins
