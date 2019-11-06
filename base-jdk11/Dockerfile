@@ -30,6 +30,7 @@ RUN \
   python3-pip \
   python3-venv \
   yarn \
+  zstd \
   && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
