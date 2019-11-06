@@ -1,5 +1,5 @@
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/base
+FROM $REGISTRY/base-buster
 LABEL maintainer="SoftwareHeritage"
 USER root
 
