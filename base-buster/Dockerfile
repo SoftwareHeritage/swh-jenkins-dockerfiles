@@ -36,7 +36,7 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
-# inlined from https://raw.githubusercontent.com/jenkinsci/docker-slave/master/Dockerfile-jdk11
+# inlined from https://raw.githubusercontent.com/jenkinsci/docker-slave/dde4b4483ef4fa06f436fe92247d1001af74a6dd/Dockerfile-jdk11
 #
 # The MIT License
 #
@@ -93,7 +93,7 @@ WORKDIR /home/${user}
 ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ##
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
-# inlined from https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/master/Dockerfile-jdk11
+# inlined from https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/ed8005a724792120e6ae284701bb41f60dae244b/Dockerfile-jdk11
 #
 # The MIT License
 #
