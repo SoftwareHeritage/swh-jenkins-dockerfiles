@@ -12,11 +12,14 @@ RUN \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/postgresql.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
   echo deb https://dl.yarnpkg.com/debian/ stable main > /etc/apt/sources.list.d/yarnpkg.list && \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/yarnpkg.asc https://dl.yarnpkg.com/debian/pubkey.gpg && \
+  echo deb https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
+  curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/elastic.asc https://artifacts.elastic.co/GPG-KEY-elasticsearch && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y \
   arcanist \
   build-essential \
+  elasticsearch \
   git-lfs \
   jq \
   libsvn-dev \
