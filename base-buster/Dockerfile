@@ -25,6 +25,7 @@ RUN \
   libsvn-dev \
   libsystemd-dev \
   maven \
+  mercurial \
   pkg-config \
   postgresql-11 \
   postgresql-client-11 \
