@@ -19,3 +19,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
   && rm -rf /var/lib/apt/lists/*
 
 USER jenkins
+
+RUN python3 -m pip install --user --upgrade \
+  pre-commit
