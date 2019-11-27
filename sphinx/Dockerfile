@@ -20,5 +20,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 USER jenkins
 
-RUN python3 -m pip install --user --upgrade --no-warn-script-location \
-  pre-commit
+RUN python3 -m pip install --user --upgrade \
+    pre-commit
