@@ -24,6 +24,7 @@ RUN \
   jq \
   libsvn-dev \
   libsystemd-dev \
+  lzip \
   maven \
   mercurial \
   pkg-config \
