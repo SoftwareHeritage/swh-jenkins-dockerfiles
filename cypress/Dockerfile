@@ -1,5 +1,5 @@
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/base-buster
+FROM $REGISTRY/tox
 LABEL maintainer="SoftwareHeritage"
 USER root
 
@@ -18,5 +18,3 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 USER jenkins
-
-RUN python3 -m pip install --user pyarcanist
