@@ -13,6 +13,8 @@ RUN \
   wget --quiet -O /etc/apt/trusted.gpg.d/yarnpkg.asc https://dl.yarnpkg.com/debian/pubkey.gpg && \
   echo deb https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
   wget --quiet -O /etc/apt/trusted.gpg.d/elastic.asc https://artifacts.elastic.co/GPG-KEY-elasticsearch && \
+  echo deb http://www.apache.org/dist/cassandra/debian 311x main > /etc/apt/sources.list.d/cassandra.list && \
+  wget --quiet -O /etc/apt/trusted.gpg.d/elastic.asc https://www.apache.org/dist/cassandra/KEYS && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y -t stretch-backports \
@@ -20,6 +22,7 @@ RUN \
   apt-get install -y \
     arcanist \
     build-essential \
+    cassandra \
     curl \
     jq \
     libffi-dev \
