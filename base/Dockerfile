@@ -14,7 +14,7 @@ RUN \
   echo deb https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
   wget --quiet -O /etc/apt/trusted.gpg.d/elastic.asc https://artifacts.elastic.co/GPG-KEY-elasticsearch && \
   echo deb http://www.apache.org/dist/cassandra/debian 311x main > /etc/apt/sources.list.d/cassandra.list && \
-  wget --quiet -O /etc/apt/trusted.gpg.d/elastic.asc https://www.apache.org/dist/cassandra/KEYS && \
+  wget --quiet -O /etc/apt/trusted.gpg.d/cassandra.asc https://www.apache.org/dist/cassandra/KEYS && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y -t stretch-backports \
