@@ -144,3 +144,11 @@ USER ${user}
 ENTRYPOINT ["jenkins-slave"]
 
 ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ##
+
+USER root
+
+# Fix crash of Cassandra on Java >=9
+# https://stackoverflow.com/q/46944788
+RUN echo "" > /etc/cassandra/jvm.options
+
+USER ${user}
