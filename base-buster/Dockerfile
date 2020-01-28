@@ -14,7 +14,7 @@ RUN \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/yarnpkg.asc https://dl.yarnpkg.com/debian/pubkey.gpg && \
   echo deb https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/elastic.asc https://artifacts.elastic.co/GPG-KEY-elasticsearch && \
-  echo deb http://www.apache.org/dist/cassandra/debian 311x main > /etc/apt/sources.list.d/cassandra.list && \
+  echo deb http://www.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/cassandra.asc https://www.apache.org/dist/cassandra/KEYS && \
 
   apt-get update && \
@@ -142,13 +142,3 @@ RUN chmod +x /usr/local/bin/jenkins-agent &&\
 USER ${user}
 
 ENTRYPOINT ["jenkins-slave"]
-
-## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ##
-
-USER root
-
-# Fix crash of Cassandra on Java >=9
-# https://stackoverflow.com/q/46944788
-RUN echo "" > /etc/cassandra/jvm.options
-
-USER ${user}
