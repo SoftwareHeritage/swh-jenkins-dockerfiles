@@ -10,10 +10,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 # retrieve and uncompress kafka application, checking it's the
 # expected archive we retrieve
 ARG SCALA_VERSION=2.12
-ARG KAFKA_VERSION=2.1.1
+ARG KAFKA_VERSION=2.4.0
 ARG KAFKA_APP=kafka_${SCALA_VERSION}-${KAFKA_VERSION}
 ARG TARBALL=${KAFKA_APP}.tgz
-ARG KAFKA_SHA512SUM=a2e8168e8de6b45e8fca1f2883f0744d3c5a939b70d8a47a5428b72188501d4c2fc11bc35759f2392680d4e8ecf2fa9d0e518e77fd28393afba22194ad018b10
+ARG KAFKA_SHA512SUM=53b52f86ea56c9fac62046524f03f75665a089ea2dae554aefe3a3d2694f2da88b5ba8725d8be55f198ba80695443559ed9de7c0b2a2817f7a6141008ff79f49
 ARG CHECKSUMS=${TARBALL}.sha512
 
 RUN curl -fsSLo ${TARBALL} http://apache.mirrors.ovh.net/ftp.apache.org/dist/kafka/${KAFKA_VERSION}/${TARBALL} && \
