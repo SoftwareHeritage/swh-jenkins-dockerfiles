@@ -41,6 +41,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   python3-pip \
   python3-venv \
   subversion \
+  tini \
   yarn \
   zstd
 
@@ -140,4 +141,4 @@ RUN chmod +x /usr/local/bin/jenkins-agent &&\
     ln -s /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-slave
 USER ${user}
 
-ENTRYPOINT ["jenkins-slave"]
+ENTRYPOINT ["/usr/bin/tini", "--", "jenkins-slave"]
