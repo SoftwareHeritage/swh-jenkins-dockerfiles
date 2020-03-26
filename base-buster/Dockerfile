@@ -1,10 +1,13 @@
+# syntax=docker/dockerfile:experimental
 FROM openjdk:11-jdk-slim-buster
 
 LABEL maintainer="SoftwareHeritage"
 
 USER root
 
-RUN \
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y apt-transport-https curl ca-certificates && \
@@ -16,7 +19,6 @@ RUN \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/elastic.asc https://artifacts.elastic.co/GPG-KEY-elasticsearch && \
   echo deb http://www.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
   curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/cassandra.asc https://www.apache.org/dist/cassandra/KEYS && \
-
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y \
@@ -40,10 +42,7 @@ RUN \
   python3-venv \
   subversion \
   yarn \
-  zstd \
-  && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
+  zstd
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-slave/dde4b4483ef4fa06f436fe92247d1001af74a6dd/Dockerfile-jdk11

@@ -5,6 +5,8 @@ IMAGES=$(addprefix $(REGISTRY)/,$(NAMES))
 DEPENDS=.depends.mk
 MAKEFLAGS += -rR
 
+export DOCKER_BUILDKIT := 1
+
 .PHONY: all run exec check checkrebuild $(NAMES) $(IMAGES)
 
 all: $(NAMES)

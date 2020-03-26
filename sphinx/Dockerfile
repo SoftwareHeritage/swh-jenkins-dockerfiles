@@ -1,8 +1,11 @@
+# syntax=docker/dockerfile:experimental
 ARG REGISTRY=swh-jenkins
 FROM $REGISTRY/base-buster
 
 USER root
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
+  export DEBIAN_FRONTEND=noninteractive && \
   apt-get install -y --no-install-recommends \
     crudini \
     dia \
@@ -15,10 +18,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     plantuml \
     postgresql-autodoc \
     rsync \
-    tox \
-  && rm -rf /var/lib/apt/lists/*
+    tox
 
 USER jenkins
 
-RUN python3 -m pip install --user --upgrade \
+RUN --mount=type=cache,id=pip-cache,target=/home/jenkins/.cache/pip,uid=1000,gid=1000 \
+  python3 -m pip install --user --upgrade \
     pre-commit
