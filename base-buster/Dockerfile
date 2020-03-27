@@ -76,8 +76,8 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
 ARG VERSION=3.35
 ARG user=jenkins
 ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
+ARG uid=115
+ARG gid=120
 
 RUN groupadd -g ${gid} ${group}
 RUN useradd -c "Jenkins user" -d /home/${user} -u ${uid} -g ${gid} -m ${user}
