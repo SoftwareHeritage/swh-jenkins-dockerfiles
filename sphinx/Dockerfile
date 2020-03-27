@@ -6,6 +6,7 @@ USER root
 
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
   export DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
   apt-get install -y --no-install-recommends \
     crudini \
     dia \
