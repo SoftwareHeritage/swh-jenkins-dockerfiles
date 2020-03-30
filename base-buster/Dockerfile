@@ -78,9 +78,12 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=115
 ARG gid=120
+ARG docker_gid=999
 
 RUN groupadd -g ${gid} ${group}
+RUN groupadd -g ${docker_gid} docker
 RUN useradd -c "Jenkins user" -d /home/${user} -u ${uid} -g ${gid} -m ${user}
+RUN gpasswd -a jenkins docker
 #(overridden)## LABEL Description="This is a base image, which provides the Jenkins agent executable (slave.jar)" Vendor="Jenkins project" Version="${VERSION}"
 
 ARG AGENT_WORKDIR=/home/${user}/agent
