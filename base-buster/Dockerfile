@@ -28,6 +28,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   elasticsearch \
   git-lfs \
   jq \
+  libfuse3-dev \
   libsvn-dev \
   libsystemd-dev \
   lzip \
