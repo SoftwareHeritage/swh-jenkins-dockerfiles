@@ -26,6 +26,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   build-essential \
   cassandra \
   elasticsearch \
+  fuse3 \
   git-lfs \
   jq \
   libfuse3-dev \
