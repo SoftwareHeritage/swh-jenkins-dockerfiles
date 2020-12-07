@@ -25,7 +25,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   arcanist \
   build-essential \
   cassandra \
-  elasticsearch \
+  elasticsearch=7.9.3 \
   fuse3 \
   git-lfs \
   jq \
