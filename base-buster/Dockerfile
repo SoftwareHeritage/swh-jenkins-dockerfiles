@@ -7,6 +7,9 @@ USER root
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
+# Pin elasticsearch version
+RUN echo 'Explanation: profile: elasticsearch\nPackage: elasticsearch elasticsearch-oss\nPin: version 7.10.0\nPin-Priority: -1' > /etc/apt/preferences.d/elasticsearch.pref
+
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
@@ -25,7 +28,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   arcanist \
   build-essential \
   cassandra \
-  elasticsearch=7.9.3 \
+  elasticsearch \
   fuse3 \
   git-lfs \
   jq \
