@@ -45,6 +45,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   python3-dev \
   python3-pip \
   python3-venv \
+  redis-server \
   subversion \
   tini \
   yarn \
