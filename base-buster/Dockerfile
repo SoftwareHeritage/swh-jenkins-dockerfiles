@@ -13,15 +13,15 @@ RUN echo 'Explanation: profile: elasticsearch\nPackage: elasticsearch elasticsea
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  apt-get install -y apt-transport-https curl ca-certificates && \
-  echo deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main > /etc/apt/sources.list.d/postgres.list && \
-  curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/postgresql.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
-  echo deb https://dl.yarnpkg.com/debian/ stable main > /etc/apt/sources.list.d/yarnpkg.list && \
-  curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/yarnpkg.asc https://dl.yarnpkg.com/debian/pubkey.gpg && \
-  echo deb https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
-  curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/elastic.asc https://artifacts.elastic.co/GPG-KEY-elasticsearch && \
-  echo deb http://www.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
-  curl --create-dirs -fsSLo /etc/apt/trusted.gpg.d/cassandra.asc https://www.apache.org/dist/cassandra/KEYS && \
+  apt-get install -y apt-transport-https curl ca-certificates gpg  && \
+  echo deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main > /etc/apt/sources.list.d/postgres.list && \
+  curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgres-archive-keyring.gpg && \
+  echo deb [signed-by=/usr/share/keyrings/yarnpkg-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main > /etc/apt/sources.list.d/yarnpkg.list && \
+  curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /usr/share/keyrings/yarnpkg-archive-keyring.gpg && \
+  echo deb [signed-by=/usr/share/keyrings/elasticsearch-archive-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
+  curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor > /usr/share/keyrings/elasticsearch-archive-keyring.gpg && \
+  echo deb [signed-by=/usr/share/keyrings/cassandra.gpg] http://www.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
+  curl -fsSL https://downloads.apache.org/cassandra/KEYS | gpg --dearmor > /usr/share/keyrings/cassandra.gpg && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y \
