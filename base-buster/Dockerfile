@@ -51,7 +51,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   subversion \
   tini \
   yarn \
-  zstd
+  zstd && \
+  apt-get install -y --no-install-recommends \
+  opam
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-slave/dde4b4483ef4fa06f436fe92247d1001af74a6dd/Dockerfile-jdk11
