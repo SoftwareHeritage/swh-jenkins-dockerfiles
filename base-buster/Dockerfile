@@ -55,6 +55,12 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   apt-get install -y --no-install-recommends \
   opam
 
+ # install emscripten required for generating tree-sitter WASM module in swh-search
+RUN cd /opt && git clone https://github.com/emscripten-core/emsdk.git && cd emsdk \
+  && ./emsdk install latest && ./emsdk activate latest
+
+ENV PATH="${PATH}:/opt/emsdk/upstream/emscripten"
+
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-slave/dde4b4483ef4fa06f436fe92247d1001af74a6dd/Dockerfile-jdk11
 #
