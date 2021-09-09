@@ -44,6 +44,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   postgresql-11 \
   postgresql-client-11 \
   postgresql-server-dev-11 \
+  pv \
   python3-dev \
   python3-pip \
   python3-venv \
