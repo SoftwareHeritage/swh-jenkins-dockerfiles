@@ -30,6 +30,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   arcanist \
   build-essential \
   cassandra \
+  cvs \
   elasticsearch \
   fuse3 \
   git-lfs \
