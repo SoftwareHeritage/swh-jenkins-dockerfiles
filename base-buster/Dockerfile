@@ -35,6 +35,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   fuse3 \
   git-lfs \
   jq \
+  libcmph-dev \
   libfuse3-dev \
   libsvn-dev \
   libsystemd-dev \
