@@ -13,6 +13,7 @@ RUN echo 'Explanation: profile: elasticsearch\nPackage: elasticsearch elasticsea
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get --allow-releaseinfo-change update && \
+  apt-get -y dist-upgrade && \
   apt-get install -y apt-transport-https curl ca-certificates gpg apt dpkg && \
   echo deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main > /etc/apt/sources.list.d/postgres.list && \
   curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgres-archive-keyring.gpg && \
