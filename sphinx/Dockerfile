@@ -2,6 +2,8 @@
 ARG REGISTRY=swh-jenkins
 FROM $REGISTRY/base-buster
 
+ARG PLANTUML_VERSION=1.2021.12
+
 USER root
 
 RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
@@ -19,9 +21,11 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
     plantuml \
     postgresql-autodoc \
     rsync \
-    tox && \
+    tox \
+    wget && \
   mkdir /home/jenkins/.cache && \
-  chown jenkins:jenkins /home/jenkins/.cache
+  chown jenkins:jenkins /home/jenkins/.cache && \
+  wget -O /usr/share/plantuml/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar
 
 USER jenkins
 
