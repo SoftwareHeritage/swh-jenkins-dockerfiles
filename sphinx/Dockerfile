@@ -23,13 +23,12 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
     rsync \
     tox \
     wget && \
-  mkdir /home/jenkins/.cache && \
-  chown jenkins:jenkins /home/jenkins/.cache && \
+  mkdir -p /home/jenkins/.cache/pip && \
+  chown -R jenkins:jenkins /home/jenkins/.cache && \
   wget -O /usr/share/plantuml/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar
 
 USER jenkins
 
 RUN --mount=type=cache,id=pip-cache,target=/home/jenkins/.cache/pip,uid=115,gid=120 \
   python3 -m pip install --user --upgrade \
-    pre-commit \
-  && chown jenkins:jenkins /home/jenkins/.cache
+    pre-commit
