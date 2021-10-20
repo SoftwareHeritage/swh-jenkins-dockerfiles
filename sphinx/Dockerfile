@@ -31,4 +31,4 @@ USER jenkins
 
 RUN --mount=type=cache,id=pip-cache,target=/home/jenkins/.cache/pip,uid=115,gid=120 \
   python3 -m pip install --user --upgrade \
-    pre-commit
+    pre-commit pyarcanist
