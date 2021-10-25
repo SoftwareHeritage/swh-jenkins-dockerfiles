@@ -35,6 +35,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   elasticsearch \
   fuse3 \
   git-lfs \
+  googletest \
   jq \
   libcmph-dev \
   libfuse3-dev \
@@ -55,6 +56,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   redis-server \
   subversion \
   tini \
+  valgrind \
   yarn \
   zstd && \
   apt-get install -y --no-install-recommends \
