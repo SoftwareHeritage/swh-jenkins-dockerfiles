@@ -18,7 +18,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
     dh-python \
     dpkg-dev \
     git \
+    git-buildpackage \
     moreutils \
+    procps \
     python3-dev \
     tini
 
