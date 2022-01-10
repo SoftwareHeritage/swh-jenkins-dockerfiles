@@ -67,8 +67,7 @@ RUN cd /opt && git clone https://github.com/emscripten-core/emsdk.git && cd emsd
   && ./emsdk install latest && ./emsdk activate latest
 ENV PATH="${PATH}:/opt/emsdk/upstream/emscripten"
 
-# Install the tree-sitter python module needed by the yarn build of swh-search
-RUN pip3 install tree-sitter==0.19.0
+RUN pip3 install tree-sitter
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-slave/dde4b4483ef4fa06f436fe92247d1001af74a6dd/Dockerfile-jdk11
