@@ -16,7 +16,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   apt-get --allow-releaseinfo-change update && \
   apt-get -y dist-upgrade && \
   apt-get install -y apt-transport-https curl ca-certificates gpg apt dpkg && \
-  echo deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main > /etc/apt/sources.list.d/postgres.list && \
+  echo deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ buster-pgdg main > /etc/apt/sources.list.d/postgres.list && \
   curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgres-archive-keyring.gpg && \
   echo deb [signed-by=/usr/share/keyrings/nodejs-archive-keyring.gpg] https://deb.nodesource.com/node_14.x buster main > /etc/apt/sources.list.d/nodejs.list && \
   curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodejs-archive-keyring.gpg && \
@@ -24,7 +24,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /usr/share/keyrings/yarnpkg-archive-keyring.gpg && \
   echo deb [signed-by=/usr/share/keyrings/elasticsearch-archive-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
   curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor > /usr/share/keyrings/elasticsearch-archive-keyring.gpg && \
-  echo deb [signed-by=/usr/share/keyrings/cassandra.gpg] http://www.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
+  echo deb [signed-by=/usr/share/keyrings/cassandra.gpg] https://www.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
   curl -fsSL https://downloads.apache.org/cassandra/KEYS | gpg --dearmor > /usr/share/keyrings/cassandra.gpg && \
   apt-get update && \
   apt-get upgrade -y && \
