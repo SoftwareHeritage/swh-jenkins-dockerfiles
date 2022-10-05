@@ -71,6 +71,10 @@ RUN cd /opt && git clone https://github.com/emscripten-core/emsdk.git && cd emsd
   && ./emsdk install latest && ./emsdk activate latest
 ENV PATH="${PATH}:/opt/emsdk/upstream/emscripten"
 
+# install nix binaries that can be used by swh directory loader
+RUN curl -L https://nixos.org/nix/install -o /tmp/nix_install
+RUN sh /tmp/nix_install --daemon --no-channel-add --daemon-user-count 1
+
 RUN pip3 install tree-sitter
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
