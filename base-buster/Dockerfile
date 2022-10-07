@@ -24,7 +24,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /usr/share/keyrings/yarnpkg-archive-keyring.gpg && \
   echo deb [signed-by=/usr/share/keyrings/elasticsearch-archive-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
   curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor > /usr/share/keyrings/elasticsearch-archive-keyring.gpg && \
-  echo deb [signed-by=/usr/share/keyrings/cassandra.gpg] https://dlcdn.apache.org/dist/cassandra/debian 40x main > /etc/apt/sources.list.d/cassandra.list && \
+  echo deb [signed-by=/usr/share/keyrings/cassandra.gpg] https://debian.cassandra.apache.org 40x main > /etc/apt/sources.list.d/cassandra.list && \
   curl -fsSL https://dlcdn.apache.org/cassandra/KEYS | gpg --dearmor > /usr/share/keyrings/cassandra.gpg && \
   apt-get update && \
   apt-get upgrade -y && \
