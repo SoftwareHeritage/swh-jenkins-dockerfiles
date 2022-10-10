@@ -74,6 +74,7 @@ ENV PATH="${PATH}:/opt/emsdk/upstream/emscripten"
 # install nix binaries that can be used by swh directory loader
 RUN curl -L https://nixos.org/nix/install -o /tmp/nix_install
 RUN sh /tmp/nix_install --daemon --no-channel-add --daemon-user-count 1
+ENV PATH="/nix/var/nix/profiles/default/bin/:${PATH}"
 
 RUN pip3 install tree-sitter
 
