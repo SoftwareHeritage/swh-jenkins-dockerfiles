@@ -78,6 +78,9 @@ ENV PATH="/nix/var/nix/profiles/default/bin/:${PATH}"
 
 RUN pip3 install tree-sitter
 
+# install Azurite, a clone of Azure Blob Storage used for swh-objstorage tests
+RUN npm install -g azurite
+
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
 #
