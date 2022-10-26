@@ -58,6 +58,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   python3-venv \
   rabbitmq-server \
   redis-server \
+  rpm2cpio \
   subversion \
   tini \
   valgrind \
