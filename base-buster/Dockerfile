@@ -32,6 +32,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   arcanist \
   build-essential \
   cassandra \
+  cpio \
   curl \
   cvs \
   elasticsearch \
