@@ -1,4 +1,6 @@
 # syntax=docker/dockerfile:experimental
+ARG REGISTRY=container-registry.softwareheritage.org/infra/swh-apps/
+FROM ${REGISTRY}rsvndump-base:latest AS rsvndump_image
 
 FROM openjdk:11-jdk-slim-buster
 
@@ -67,6 +69,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
   zstd && \
   apt-get install -y --no-install-recommends \
   opam
+
+# Install rsvndump (for svn loader)
+COPY --from=rsvndump_image /usr/local/bin/rsvndump /usr/local/bin/rsvndump
 
 # install emscripten required for generating tree-sitter WASM module in swh-search
 RUN cd /opt && git clone https://github.com/emscripten-core/emsdk.git && cd emsdk \
