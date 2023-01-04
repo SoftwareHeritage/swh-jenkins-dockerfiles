@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:experimental
-ARG REGISTRY=container-registry.softwareheritage.org/infra/swh-apps/
-FROM ${REGISTRY}rsvndump-base:latest AS rsvndump_image
+ARG SWH_REGISTRY=container-registry.softwareheritage.org/infra/swh-apps/
+FROM ${SWH_REGISTRY}rsvndump-base:latest AS rsvndump_image
 
 FROM openjdk:11-jdk-slim-buster
 
