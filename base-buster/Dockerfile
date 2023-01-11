@@ -79,14 +79,20 @@ RUN cd /opt && git clone https://github.com/emscripten-core/emsdk.git && cd emsd
 ENV PATH="${PATH}:/opt/emsdk/upstream/emscripten"
 
 # install nix binaries that can be used by swh directory loader
-RUN curl -L https://nixos.org/nix/install -o /tmp/nix_install
-RUN sh /tmp/nix_install --daemon --no-channel-add --daemon-user-count 1
+RUN curl -L https://nixos.org/nix/install -o /tmp/nix_install && \
+    sh /tmp/nix_install --daemon --no-channel-add --daemon-user-count 1 && \
+    rm /tmp/nix_install
 ENV PATH="/nix/var/nix/profiles/default/bin/:${PATH}"
 
 RUN pip3 install tree-sitter
 
 # install Azurite, a clone of Azure Blob Storage used for swh-objstorage tests
 RUN npm install -g azurite
+
+# install sentry CLI
+RUN curl -sL https://sentry.io/get-cli/ -o /tmp/sentry-install && \
+    bash /tmp/sentry-install && \
+    rm /tmp/sentry-install
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
