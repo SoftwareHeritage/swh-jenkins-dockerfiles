@@ -21,7 +21,6 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
     plantuml \
     postgresql-autodoc \
     rsync \
-    tox \
     wget && \
   mkdir -p /home/jenkins/.cache/pip && \
   chown -R jenkins:jenkins /home/jenkins/.cache && \
@@ -31,4 +30,4 @@ USER jenkins
 
 RUN --mount=type=cache,id=pip-cache,target=/home/jenkins/.cache/pip,uid=115,gid=120 \
   python3 -m pip install --user --upgrade \
-    pre-commit pyarcanist
+    pre-commit pyarcanist tox
