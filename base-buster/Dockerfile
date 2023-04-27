@@ -93,6 +93,27 @@ RUN npm install -g azurite
 RUN curl -sL https://sentry.io/get-cli/ -o /tmp/sentry-install && \
     bash /tmp/sentry-install && \
     rm /tmp/sentry-install
+    
+
+# prepare for building ruby from source
+SHELL ["/bin/bash", "-c"]
+RUN apt update && \
+    apt install -y procps libssl-dev libreadline-dev zlib1g-dev \
+    autoconf bison libyaml-dev \
+    libncurses5-dev libffi-dev libgdbm-dev
+
+# install rbenv, build ruby 3.0.1, and install bibliothecary,
+# which needs Ruby >= 2.7
+# TODO: use system ruby instead when updating base image to Debian >= 11
+RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv && \
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && \
+    echo 'eval "$(rbenv init -)"' >> ~/.bashrc && \
+    git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build && \
+    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc && \
+    source ~/.bashrc && \
+    rbenv install 3.0.1 && \
+    rbenv global 3.0.1 && \
+    gem install bibliothecary
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
