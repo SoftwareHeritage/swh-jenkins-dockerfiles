@@ -8,26 +8,57 @@ LABEL maintainer="SoftwareHeritage"
 
 USER root
 
-RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
+    > /etc/apt/apt.conf.d/keep-cache
 
 # Pin elasticsearch version
-RUN echo 'Explanation: profile: elasticsearch\nPackage: elasticsearch elasticsearch-oss\nPin: version 7.10.0\nPin-Priority: -1' > /etc/apt/preferences.d/elasticsearch.pref
+ARG ES_PREF=/etc/apt/preferences.d/elasticsearch.pref
+RUN echo 'Explanation: profile: elasticsearch' > ${ES_PREF}; \
+  echo 'Package: elasticsearch elasticsearch-oss' >> ${ES_PREF}; \
+  echo 'Pin: version 7.10.0\nPin-Priority: -1' >> ${ES_PREF}
 
-RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
+ARG PGDG_REPO=https://apt.postgresql.org/pub/repos/apt
+ARG PGDG_GPG_KEY=https://www.postgresql.org/media/keys/ACCC4CF8.asc
+ARG PGDG_KEYRING=/usr/share/keyrings/postgres-archive-keyring.gpg
+
+ARG NODE_REPO=https://deb.nodesource.com/node_14.x
+ARG NODE_GPG_KEY=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+ARG NODE_KEYRING=/usr/share/keyrings/nodejs-archive-keyring.gpg
+
+ARG YARN_REPO=https://dl.yarnpkg.com/debian/
+ARG YARN_GPG_KEY=https://dl.yarnpkg.com/debian/pubkey.gpg
+ARG YARN_KEYRING=/usr/share/keyrings/yarnpkg-archive-keyring.gpg
+
+ARG ELASTIC_REPO=https://artifacts.elastic.co/packages/7.x/apt
+ARG ELASTIC_GPG_KEY=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+ARG ELASTIC_KEYRING=/usr/share/keyrings/elasticsearch-archive-keyring.gpg
+
+ARG CASSANDRA_REPO=https://debian.cassandra.apache.org
+ARG CASSANDRA_GPG_KEY=https://dlcdn.apache.org/cassandra/KEYS
+ARG CASSANDRA_KEYRING=/usr/share/keyrings/cassandra.gpg
+
+RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
+    --mount=type=cache,id=apt-lists,target=/var/lib/apt \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get --allow-releaseinfo-change update && \
   apt-get -y dist-upgrade && \
   apt-get install -y apt-transport-https curl ca-certificates gpg apt dpkg && \
-  echo deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ buster-pgdg main > /etc/apt/sources.list.d/postgres.list && \
-  curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgres-archive-keyring.gpg && \
-  echo deb [signed-by=/usr/share/keyrings/nodejs-archive-keyring.gpg] https://deb.nodesource.com/node_14.x buster main > /etc/apt/sources.list.d/nodejs.list && \
-  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodejs-archive-keyring.gpg && \
-  echo deb [signed-by=/usr/share/keyrings/yarnpkg-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main > /etc/apt/sources.list.d/yarnpkg.list && \
-  curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /usr/share/keyrings/yarnpkg-archive-keyring.gpg && \
-  echo deb [signed-by=/usr/share/keyrings/elasticsearch-archive-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main > /etc/apt/sources.list.d/elastic-7.x.list && \
-  curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor > /usr/share/keyrings/elasticsearch-archive-keyring.gpg && \
-  echo deb [signed-by=/usr/share/keyrings/cassandra.gpg] https://debian.cassandra.apache.org 40x main > /etc/apt/sources.list.d/cassandra.list && \
-  curl -fsSL https://dlcdn.apache.org/cassandra/KEYS | gpg --dearmor > /usr/share/keyrings/cassandra.gpg && \
+  echo "deb [signed-by=${PGDG_KEYRING}] ${PGDG_REPO} buster-pgdg main" \
+    > /etc/apt/sources.list.d/postgres.list && \
+  curl -fsSL ${PGDG_GPG_KEY} | gpg --dearmor > ${PGDG_KEYRING} && \
+  echo "deb [signed-by=${NODE_KEYRING}] ${NODE_REPO} buster main" \
+    > /etc/apt/sources.list.d/nodejs.list && \
+  curl -fsSL ${NODE_GPG_KEY} | gpg --dearmor > ${NODE_KEYRING} && \
+  echo "deb [signed-by=${YARN_KEYRING}] ${YARN_REPO} stable main" \
+    > /etc/apt/sources.list.d/yarnpkg.list && \
+  curl -fsSL ${YARN_GPG_KEY} | gpg --dearmor > ${YARN_KEYRING} && \
+  echo "deb [signed-by=${ELASTIC_KEYRING}] ${ELASTIC_REPO} stable main" \
+    > /etc/apt/sources.list.d/elastic-7.x.list && \
+  curl -fsSL ${ELASTIC_GPG_KEY} | gpg --dearmor > ${ELASTIC_KEYRING} && \
+  echo "deb [signed-by=${CASSANDRA_KEYRING}] ${CASSANDRA_REPO} 40x main" \
+    > /etc/apt/sources.list.d/cassandra.list && \
+  curl -fsSL ${CASSANDRA_GPG_KEY} | gpg --dearmor > ${CASSANDRA_KEYRING} && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y \
@@ -154,7 +185,8 @@ RUN gpasswd -a jenkins docker
 
 ARG AGENT_WORKDIR=/home/${user}/agent
 
-RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
+RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar \
+    https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
   && chmod 755 /usr/share/jenkins \
   && chmod 644 /usr/share/jenkins/agent.jar \
   && ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar
