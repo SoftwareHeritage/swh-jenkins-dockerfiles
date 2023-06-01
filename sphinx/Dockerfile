@@ -13,7 +13,6 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
     crudini \
     dia \
     graphviz \
-    imagemagick \
     inkscape \
     libffi-dev \
     maven \
