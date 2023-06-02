@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:experimental
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/base-buster
+FROM $REGISTRY/bookworm-multipython
 
 ARG PLANTUML_VERSION=1.2021.12
 
 USER root
 
-RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=apt-lists,target=/var/lib/apt \
+RUN \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
   apt-get install -y --no-install-recommends \
@@ -28,6 +28,5 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt --mount=type=cache,id=
 
 USER jenkins
 
-RUN --mount=type=cache,id=pip-cache,target=/home/jenkins/.cache/pip,uid=115,gid=120 \
-  python3 -m pip install --user --upgrade \
-    pre-commit pyarcanist tox
+RUN pip3.11 install --user --upgrade \
+    pre-commit tox
