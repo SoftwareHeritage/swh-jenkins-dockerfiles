@@ -126,7 +126,7 @@ RUN curl -sL https://sentry.io/get-cli/ -o /tmp/sentry-install && \
   rm /tmp/sentry-install
 
 
-# prepare for building ruby from source
+# install libs for building ruby from source
 SHELL ["/bin/bash", "-c"]
 RUN apt update && \
   apt install -y procps libssl-dev libreadline-dev zlib1g-dev \
@@ -136,15 +136,18 @@ RUN apt update && \
 # install rbenv, build ruby 3.0.1, and install bibliothecary,
 # which needs Ruby >= 2.7
 # TODO: use system ruby instead when updating base image to Debian >= 11
-RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv && \
-  echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && \
-  echo 'eval "$(rbenv init -)"' >> ~/.bashrc && \
-  git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build && \
-  echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc && \
-  source ~/.bashrc && \
-  rbenv install 3.0.1 && \
-  rbenv global 3.0.1 && \
-  gem install bibliothecary
+RUN git clone https://github.com/rbenv/rbenv.git /usr/local/.rbenv && \
+    git clone https://github.com/rbenv/ruby-build.git /usr/local/.rbenv/plugins/ruby-build && \
+    echo 'export PATH="/usr/local/.rbenv/bin:$PATH"' >> /etc/profile && \
+    echo 'export RBENV_ROOT="/usr/local/.rbenv"' >> /etc/profile && \
+    echo 'eval "$(rbenv init -)"' >> /etc/profile && \
+    echo 'export PATH="/usr/local/.rbenv/plugins/ruby-build/bin:$PATH"' >> /etc/profile && \
+    source /etc/profile && \
+    rbenv install 3.0.1 && \
+    rbenv global 3.0.1 && \
+    gem install bibliothecary
+
+ENV PATH="${PATH}:/usr/local/.rbenv/shims"
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
