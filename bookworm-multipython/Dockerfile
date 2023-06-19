@@ -30,7 +30,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     curl \
     ca-certificates \
     git \
-    gpg
+    gpg \
+    openjdk-17-jre-headless
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
   echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
