@@ -42,7 +42,7 @@ ifeq (check,$(filter check,$(MAKECMDGOALS)))
 endif
 
 $(IMAGES): %:
-	docker build -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@))
+	docker build --build-arg REGISTRY=$(REGISTRY) -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@))
 ifeq (checkrebuild,$(filter checkrebuild,$(MAKECMDGOALS)))
 	./check_update.sh $@ || (docker build --build-arg REGISTRY=$(REGISTRY) --no-cache -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@)) && ./check_update.sh $@)
 endif
