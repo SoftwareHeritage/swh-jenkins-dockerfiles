@@ -132,12 +132,6 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 # Install rsvndump from swh registry (needed for swh-loader-svn)
 COPY --from=container-registry.softwareheritage.org/swh/infra/swh-apps/rsvndump-base:latest /usr/local/bin/rsvndump /usr/local/bin/rsvndump
 
-# install nix binaries that can be used by swh directory loader
-RUN curl -L https://nixos.org/nix/install -o /tmp/nix_install && \
-  sh /tmp/nix_install --daemon --no-channel-add --daemon-user-count 1 && \
-  rm /tmp/nix_install
-ENV PATH="/nix/var/nix/profiles/default/bin/:${PATH}"
-
 USER ${user}
 WORKDIR /home/${user}
 
