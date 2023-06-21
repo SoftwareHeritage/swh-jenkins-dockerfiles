@@ -120,9 +120,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   tree \
   valgrind \
   yarn \
-  zstd && \
-  apt-get install -y --no-install-recommends \
-  opam
+  zstd
 
 # Install openjdk 11 from eclipse-temurin (needed for cassandra)
 ENV JAVA_HOME=/opt/java/openjdk
@@ -161,6 +159,16 @@ RUN mkdir -p /home/${user}/.local/bin && \
 # install bibliothecary, needed for swh-indexer
 ENV GEM_HOME=/home/${user}/.local/rubygems
 RUN gem install bibliothecary
+
+ARG opam_version=2.0.10
+
+# install opam
+RUN curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh -o /tmp/opam-install && \
+  cd /home/${user}/.local/bin && \
+  bash /tmp/opam-install --version ${opam_version} --download-only && \
+  chmod +x opam-* && \
+  ln -s opam-* opam && \
+  rm /tmp/opam-install
 
 # install pyenv
 
