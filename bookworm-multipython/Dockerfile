@@ -14,7 +14,7 @@ ARG py38_version=3.8.17
 ARG py39_version=3.9.17
 ARG py310_version=3.10.12
 ARG py311_version=3.11.4
-ARG py312_version=3.12.0b2
+ARG py312_version=3.12-dev
 
 RUN groupadd -g ${gid} ${group}
 RUN groupadd -g ${docker_gid} docker
