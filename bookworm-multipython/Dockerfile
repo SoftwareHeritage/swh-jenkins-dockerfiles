@@ -87,6 +87,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   mkdir -p /etc/postgresql-common && \
   echo create_main_cluster=false > /etc/postgresql-common/createcluster.conf && \
   apt-get install -y \
+  bubblewrap \
   cassandra \
   cpio \
   cvs \
