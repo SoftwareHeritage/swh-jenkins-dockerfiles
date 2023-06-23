@@ -17,6 +17,7 @@ RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
     pip \
     setuptools \
     wheel \
+    build \
     twine \
     tox \
     Radon \
