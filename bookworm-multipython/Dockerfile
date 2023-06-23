@@ -246,6 +246,8 @@ COPY --from=build_py312 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py312_ve
 RUN pyenv rehash
 RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version}
 
+ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
+
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
 #

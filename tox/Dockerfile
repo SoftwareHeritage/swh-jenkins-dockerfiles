@@ -13,7 +13,7 @@ USER jenkins
 
 RUN mkdir -p /home/jenkins/.cache/pip
 
-RUN pip3.11 install --user --upgrade --no-warn-script-location \
+RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
     pip \
     setuptools \
     wheel \
@@ -24,4 +24,4 @@ RUN pip3.11 install --user --upgrade --no-warn-script-location \
     coverage \
     codespell \
     pre-commit && \
-  python3.11 -m virtualenv --upgrade-embed-wheels
+  ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m virtualenv --upgrade-embed-wheels

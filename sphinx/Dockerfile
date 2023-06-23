@@ -28,5 +28,5 @@ RUN \
 
 USER jenkins
 
-RUN pip3.11 install --user --upgrade \
+RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
     pre-commit tox
