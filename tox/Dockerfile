@@ -14,15 +14,15 @@ USER jenkins
 RUN mkdir -p /home/jenkins/.cache/pip
 
 RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
-    pip \
-    setuptools \
-    wheel \
-    build \
-    twine \
-    tox \
     Radon \
-    pylint \
-    coverage \
+    build \
     codespell \
-    pre-commit && \
-  ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m virtualenv --upgrade-embed-wheels
+    coverage \
+    pip \
+    pre-commit \
+    pylint \
+    setuptools \
+    tox \
+    twine \
+    wheel \
+  && ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m virtualenv --upgrade-embed-wheels
