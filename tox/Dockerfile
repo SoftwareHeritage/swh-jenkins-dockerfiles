@@ -16,6 +16,7 @@ RUN mkdir -p /home/jenkins/.cache/pip
 RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
     Radon \
     build \
+    cibuildwheel \
     codespell \
     coverage \
     pip \
