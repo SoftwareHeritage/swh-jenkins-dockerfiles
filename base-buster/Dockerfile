@@ -91,6 +91,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   python3-pip \
   python3-venv \
   rabbitmq-server \
+  r-base-core \
   redis-server \
   rpm2cpio \
   subversion \

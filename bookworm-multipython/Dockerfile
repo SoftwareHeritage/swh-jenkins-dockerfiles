@@ -112,6 +112,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   postgresql-client-15 \
   postgresql-server-dev-15 \
   pv \
+  r-base-core \
   rabbitmq-server \
   redis-server \
   ruby \
