@@ -249,6 +249,16 @@ RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
 
+# install rage (for swh-alter)
+
+FROM rust:slim-bookworm as rust_builder
+
+RUN cargo install rage
+
+FROM build_bookworm_with_packages
+
+COPY --from=rust_builder /usr/local/cargo/bin/rage /usr/local/cargo/bin/rage-keygen /usr/local/bin
+
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
 #
