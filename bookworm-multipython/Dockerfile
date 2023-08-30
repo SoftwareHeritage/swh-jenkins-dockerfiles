@@ -172,6 +172,17 @@ RUN curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.s
   ln -s opam-* opam && \
   rm /tmp/opam-install
 
+# install rage (for swh-alter)
+
+FROM rust:slim-bookworm as build_rage
+# Use the latest available version so we can detect if rage behavior has changed when
+# testing swh-alter. Otherwise, this might only be detected when processing a
+# takedown notice or restoring a bundle… which would not be a nice experience.
+RUN cargo install rage
+
+FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rage
+COPY --from=build_rage /usr/local/cargo/bin/rage /usr/local/cargo/bin/rage-keygen /usr/local/bin
+
 # install pyenv
 
 FROM build_bookworm_base AS build_pyenv
@@ -219,7 +230,7 @@ RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbos
 FROM build_pyenv as build_py312
 RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py312_version}
 
-FROM build_bookworm_with_packages
+FROM build_bookworm_with_packages_and_rage
 
 ENV PYENV_ROOT "/home/${user}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
@@ -248,16 +259,6 @@ RUN pyenv rehash
 RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version}
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
-
-# install rage (for swh-alter)
-
-FROM rust:slim-bookworm as rust_builder
-
-RUN cargo install rage
-
-FROM build_bookworm_with_packages
-
-COPY --from=rust_builder /usr/local/cargo/bin/rage /usr/local/cargo/bin/rage-keygen /usr/local/bin
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
