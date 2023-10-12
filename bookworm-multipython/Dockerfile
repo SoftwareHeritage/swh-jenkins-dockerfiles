@@ -89,6 +89,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   apt-get install -y \
   bubblewrap \
   cassandra \
+  clang-format \
   cpio \
   cvs \
   elasticsearch \
@@ -98,8 +99,12 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   git-lfs \
   googletest \
   jq \
+  lcov \
+  libcapture-tiny-perl \
   libcmph-dev \
+  libdatetime-perl \
   libfuse3-dev \
+  libgtest-dev \
   libmagic-dev \
   libsvn-dev \
   libsystemd-dev \
