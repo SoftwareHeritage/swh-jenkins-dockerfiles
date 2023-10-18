@@ -7,6 +7,12 @@ MAKEFLAGS += -rR
 
 export DOCKER_BUILDKIT := 1
 
+JENKINS_UID ?= 115
+JENKINS_GID ?= 120
+DOCKER_GID ?= 999
+
+DOCKER_BUILD := docker build --build-arg REGISTRY=$(REGISTRY) --build-arg uid=$(JENKINS_UID) --build-arg gid=$(JENKINS_GID) --build-arg docker_gid=$(DOCKER_GID)
+
 .PHONY: all run exec check checkrebuild $(NAMES) $(IMAGES)
 
 all: $(NAMES)
@@ -42,7 +48,7 @@ ifeq (check,$(filter check,$(MAKECMDGOALS)))
 endif
 
 $(IMAGES): %:
-	docker build --build-arg REGISTRY=$(REGISTRY) -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@))
+	$(DOCKER_BUILD) -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@))
 ifeq (checkrebuild,$(filter checkrebuild,$(MAKECMDGOALS)))
-	./check_update.sh $@ || (docker build --build-arg REGISTRY=$(REGISTRY) --no-cache -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@)) && ./check_update.sh $@)
+	./check_update.sh $@ || ($(DOCKER_BUILD) --no-cache -t $@ $(subst :,/,$(subst $(REGISTRY)/,,$@)) && ./check_update.sh $@)
 endif
