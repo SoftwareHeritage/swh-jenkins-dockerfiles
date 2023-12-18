@@ -193,14 +193,14 @@ COPY ./prepare-cargo-cache ${CARGO_HOME}/bin
 
 # install rage (for swh-alter)
 
-FROM rust:slim-bookworm as build_rage
+FROM build_bookworm_with_packages as build_rage
 # Use the latest available version so we can detect if rage behavior has changed when
 # testing swh-alter. Otherwise, this might only be detected when processing a
 # takedown notice or restoring a bundle… which would not be a nice experience.
 RUN cargo install rage
 
 FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rage
-COPY --from=build_rage /usr/local/cargo/bin/rage /usr/local/cargo/bin/rage-keygen /usr/local/bin
+COPY --from=build_rage /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
 
 # install pyenv
 
