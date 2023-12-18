@@ -177,6 +177,20 @@ RUN curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.s
   ln -s opam-* opam && \
   rm /tmp/opam-install
 
+# Install rustup and the default rust toolchain
+
+ENV CARGO_HOME="/home/${user}/.cargo"
+ENV RUSTUP_HOME="/home/${user}/.rustup"
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh && \
+  chmod +x /tmp/rustup-init.sh && \
+  /tmp/rustup-init.sh -y && \
+  rm /tmp/rustup-init.sh
+
+ENV PATH="${CARGO_HOME}/bin:${PATH}"
+
+COPY ./prepare-cargo-cache ${CARGO_HOME}/bin
+
 # install rage (for swh-alter)
 
 FROM rust:slim-bookworm as build_rage
@@ -264,6 +278,8 @@ RUN pyenv rehash
 RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version}
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
+
+RUN mkdir /home/${user}/.cache
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile

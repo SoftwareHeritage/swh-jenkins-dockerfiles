@@ -1,0 +1,15 @@
+#!/bin/bash
+# Make sure cargo cache directories are properly moved to ~/.cache so they can
+# stay around for subsequent runs
+#
+# See https://doc.rust-lang.org/nightly/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
+
+set -ex
+
+for dir in registry/index/ registry/cache/ git/db/; do
+    base="$(dirname $dir)"
+    mkdir -p "${HOME}/.cargo/$base"
+    mkdir -p "${HOME}/.cache/cargo/$dir"
+    rm -rf "${HOME}/.cargo/${dir#/}"
+    ln -s "${HOME}/.cache/cargo/$dir" "${HOME}/.cargo/$base/"
+done
