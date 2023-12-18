@@ -127,9 +127,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   r-base-core \
   rabbitmq-server \
   redis-server \
+  rpm2cpio \
   ruby \
   ruby-dev \
-  rpm2cpio \
   subversion \
   tree \
   valgrind \
