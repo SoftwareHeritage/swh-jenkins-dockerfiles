@@ -90,6 +90,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   bubblewrap \
   cassandra \
   clang-format \
+  cmake \
   cpio \
   cvs \
   elasticsearch \
@@ -105,9 +106,14 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   libdatetime-perl \
   libfuse3-dev \
   libgtest-dev \
+  liblz4-dev \
   libmagic-dev \
+  libprotobuf-dev \
+  libprotoc-dev \
+  libsnappy-dev \
   libsvn-dev \
   libsystemd-dev \
+  libzstd-dev \
   lzip \
   maven \
   mercurial \
@@ -116,6 +122,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   postgresql-15 \
   postgresql-client-15 \
   postgresql-server-dev-15 \
+  protobuf-compiler \
   pv \
   r-base-core \
   rabbitmq-server \
@@ -127,6 +134,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   tree \
   valgrind \
   yarn \
+  zlib1g-dev \
   zstd
 
 # Install openjdk 11 from eclipse-temurin (needed for cassandra)
