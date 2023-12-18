@@ -142,17 +142,17 @@ WORKDIR /home/${user}
 
 ENV LANG C.UTF-8
 
-ENV PATH "${PATH}:/home/${user}/.local/bin"
+ENV PATH "/home/${user}/.local/bin:${PATH}"
 
 # Prepare npm package prefix
 RUN mkdir -p /home/${user}/.local/npm-packages && \
   npm config set prefix /home/${user}/.local/npm-packages
-ENV PATH "${PATH}:/home/${user}/.local/npm-packages/bin"
+ENV PATH "/home/${user}/.local/npm-packages/bin:${PATH}"
 
 
 # install emscripten required for generating tree-sitter WASM module in swh-search
 COPY --from=emscripten/emsdk:latest /emsdk /emsdk
-ENV PATH="${PATH}:/emsdk/upstream/emscripten"
+ENV PATH="/emsdk/upstream/emscripten:${PATH}"
 
 # install Azurite, a clone of Azure Blob Storage used for swh-objstorage tests
 RUN npm install -g azurite
