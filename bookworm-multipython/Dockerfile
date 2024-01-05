@@ -49,9 +49,9 @@ ARG PGDG_REPO=https://apt.postgresql.org/pub/repos/apt
 ARG PGDG_GPG_KEY=https://www.postgresql.org/media/keys/ACCC4CF8.asc
 ARG PGDG_KEYRING=/etc/apt/keyrings/postgres-archive-keyring.gpg
 
-ARG NODE_REPO=https://deb.nodesource.com/node_18.x
-ARG NODE_GPG_KEY=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-ARG NODE_KEYRING=/etc/apt/keyrings/nodejs-archive-keyring.gpg
+# ARG NODE_REPO=https://deb.nodesource.com/node_18.x
+# ARG NODE_GPG_KEY=https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+# ARG NODE_KEYRING=/etc/apt/keyrings/nodejs-archive-keyring.gpg
 
 ARG YARN_REPO=https://dl.yarnpkg.com/debian/
 ARG YARN_GPG_KEY=https://dl.yarnpkg.com/debian/pubkey.gpg
@@ -70,9 +70,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   echo "deb [signed-by=${PGDG_KEYRING}] ${PGDG_REPO} bookworm-pgdg main" \
     > /etc/apt/sources.list.d/postgres.list && \
   curl -fsSL ${PGDG_GPG_KEY} | gpg --dearmor > ${PGDG_KEYRING} && \
-  echo "deb [signed-by=${NODE_KEYRING}] ${NODE_REPO} buster main" \
-    > /etc/apt/sources.list.d/nodejs.list && \
-  curl -fsSL ${NODE_GPG_KEY} | gpg --dearmor > ${NODE_KEYRING} && \
+  # echo "deb [signed-by=${NODE_KEYRING}] ${NODE_REPO} nodistro main" \
+  #   > /etc/apt/sources.list.d/nodejs.list && \
+  # curl -fsSL ${NODE_GPG_KEY} | gpg --dearmor > ${NODE_KEYRING} && \
   echo "deb [signed-by=${YARN_KEYRING}] ${YARN_REPO} stable main" \
     > /etc/apt/sources.list.d/yarnpkg.list && \
   curl -fsSL ${YARN_GPG_KEY} | gpg --dearmor > ${YARN_KEYRING} && \
@@ -117,6 +117,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   lzip \
   maven \
   mercurial \
+  npm \
   nodejs \
   pkg-config \
   postgresql-15 \
