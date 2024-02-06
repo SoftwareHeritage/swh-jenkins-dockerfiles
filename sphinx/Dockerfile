@@ -21,6 +21,7 @@ RUN \
     plantuml \
     postgresql-autodoc \
     rsync \
+    scour \
     wget && \
   mkdir -p /home/jenkins/.cache/pip && \
   chown -R jenkins:jenkins /home/jenkins/.cache && \
