@@ -117,6 +117,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   lzip \
   maven \
   mercurial \
+  myrepos \
   npm \
   nodejs \
   pkg-config \
