@@ -212,6 +212,8 @@ RUN cargo install rage
 FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rage
 COPY --from=build_rage /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
 
+RUN rustup component add clippy
+
 # install pyenv
 
 FROM build_bookworm_base AS build_pyenv
