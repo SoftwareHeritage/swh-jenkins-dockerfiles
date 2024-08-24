@@ -208,9 +208,11 @@ FROM build_bookworm_with_packages as build_rage
 # testing swh-alter. Otherwise, this might only be detected when processing a
 # takedown notice or restoring a bundle… which would not be a nice experience.
 RUN cargo install rage
+RUN cargo install swh-graph --all-features
 
 FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rage
 COPY --from=build_rage /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
+COPY --from=build_rage /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
 
 RUN rustup component add clippy
 
