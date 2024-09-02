@@ -212,9 +212,9 @@ ENV PATH="${CARGO_HOME}/bin:${PATH}"
 
 COPY ./prepare-cargo-cache ${CARGO_HOME}/bin
 
-# install rage (for swh-alter)
+FROM build_bookworm_with_packages as build_rust
 
-FROM build_bookworm_with_packages as build_rage
+# install rage (for swh-alter)
 # Use the latest available version so we can detect if rage behavior has changed when
 # testing swh-alter. Otherwise, this might only be detected when processing a
 # takedown notice or restoring a bundle… which would not be a nice experience.
@@ -225,6 +225,9 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         CARGO_INCREMENTAL=0 \
       cargo install rage
 
+# Install rust-based swh-graph binaries to avoid compiling it on all test runs
+# of its dependencies (e.g. swh-provenance)
+
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
@@ -232,9 +235,9 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         CARGO_INCREMENTAL=0 \
       cargo install swh-graph --all-features
 
-FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rage
-COPY --from=build_rage /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
-COPY --from=build_rage /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
+FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rust
+COPY --from=build_rust /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
+COPY --from=build_rust /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/bin
 
 RUN rustup component add clippy
 
@@ -315,7 +318,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         MAKEOPTS='-j8' \
       pyenv install --verbose --keep ${py312_version}
 
-FROM build_bookworm_with_packages_and_rage
+FROM build_bookworm_with_packages_and_rust
 
 ENV PYENV_ROOT "/home/${user}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
