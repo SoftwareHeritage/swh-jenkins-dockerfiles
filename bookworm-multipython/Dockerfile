@@ -37,6 +37,17 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
   echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
     > /etc/apt/apt.conf.d/keep-cache
 
+# Install sccache and hard link gcc and g++ to it so that sccache is used for C(++)
+# builds implicitly
+ARG sccache_version=0.8.1
+RUN cd /usr/local/bin && \
+    curl -sSfL https://github.com/mozilla/sccache/releases/download/v${sccache_version}/sccache-v${sccache_version}-x86_64-unknown-linux-musl.tar.gz | \
+    tar --strip-components=1 -xz sccache-v${sccache_version}-x86_64-unknown-linux-musl/sccache && \
+    for exe in gcc g++; do ln sccache $exe; done
+
+COPY ./env-from-secrets /usr/local/bin
+
+
 FROM build_bookworm_base AS build_bookworm_with_packages
 
 # Pin elasticsearch version
@@ -207,8 +218,19 @@ FROM build_bookworm_with_packages as build_rage
 # Use the latest available version so we can detect if rage behavior has changed when
 # testing swh-alter. Otherwise, this might only be detected when processing a
 # takedown notice or restoring a bundle… which would not be a nice experience.
-RUN cargo install rage
-RUN cargo install swh-graph --all-features
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        CARGO_WRAPPER=sccache \
+        CARGO_INCREMENTAL=0 \
+      cargo install rage
+
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        CARGO_WRAPPER=sccache \
+        CARGO_INCREMENTAL=0 \
+      cargo install swh-graph --all-features
 
 FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rage
 COPY --from=build_rage /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
@@ -246,22 +268,52 @@ ENV PYENV_ROOT "/home/${user}/.pyenv"
 ENV PATH="${PATH}:/home/${user}/.pyenv/bin"
 
 FROM build_pyenv AS build_py37
-RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py37_version}
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose --keep ${py37_version}
 
 FROM build_pyenv AS build_py38
-RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py38_version}
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose --keep ${py38_version}
 
 FROM build_pyenv AS build_py39
-RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py39_version}
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose --keep ${py39_version}
 
 FROM build_pyenv as build_py310
-RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py310_version}
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose --keep ${py310_version}
 
 FROM build_pyenv as build_py311
-RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py311_version}
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose --keep ${py311_version}
 
 FROM build_pyenv as build_py312
-RUN env PYTHON_CONFIGURE_OPTS='--with-lto' MAKEOPTS='-j8' pyenv install --verbose --keep ${py312_version}
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose --keep ${py312_version}
 
 FROM build_bookworm_with_packages_and_rage
 

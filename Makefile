@@ -11,7 +11,10 @@ JENKINS_UID ?= 115
 JENKINS_GID ?= 120
 DOCKER_GID ?= 999
 
-DOCKER_BUILD := docker build --build-arg REGISTRY=$(REGISTRY) --build-arg uid=$(JENKINS_UID) --build-arg gid=$(JENKINS_GID) --build-arg docker_gid=$(DOCKER_GID)
+export SCCACHE_REDIS_ENDPOINT ?=
+export SCCACHE_REDIS_PASSWORD ?=
+
+DOCKER_BUILD := docker build --build-arg REGISTRY=$(REGISTRY) --build-arg uid=$(JENKINS_UID) --build-arg gid=$(JENKINS_GID) --build-arg docker_gid=$(DOCKER_GID) --secret id=SCCACHE_REDIS_ENDPOINT --secret id=SCCACHE_REDIS_PASSWORD
 
 .PHONY: all run exec check checkrebuild $(NAMES) $(IMAGES)
 
