@@ -221,7 +221,7 @@ FROM build_bookworm_with_packages as build_rust
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
-        CARGO_WRAPPER=sccache \
+        RUSTC_WRAPPER=sccache \
         CARGO_INCREMENTAL=0 \
       cargo install rage
 
@@ -231,7 +231,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
-        CARGO_WRAPPER=sccache \
+        RUSTC_WRAPPER=sccache \
         CARGO_INCREMENTAL=0 \
       cargo install swh-graph --all-features
 
