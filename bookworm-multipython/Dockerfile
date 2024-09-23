@@ -55,9 +55,9 @@ FROM build_bookworm_base AS build_bookworm_with_packages
 
 # Pin elasticsearch version
 ARG ES_PREF=/etc/apt/preferences.d/elasticsearch.pref
-RUN echo 'Explanation: profile: elasticsearch' > ${ES_PREF}; \
+RUN echo 'Explanation: elasticsearch' > ${ES_PREF}; \
   echo 'Package: elasticsearch elasticsearch-oss' >> ${ES_PREF}; \
-  echo 'Pin: version 7.10.0\nPin-Priority: -1' >> ${ES_PREF}
+  echo 'Pin: version 8.15.1\nPin-Priority: 1000' >> ${ES_PREF}
 
 ARG PGDG_REPO=https://apt.postgresql.org/pub/repos/apt
 ARG PGDG_GPG_KEY=https://www.postgresql.org/media/keys/ACCC4CF8.asc
@@ -67,7 +67,7 @@ ARG NODE_REPO=https://deb.nodesource.com/node_20.x
 ARG NODE_GPG_KEY=https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
 ARG NODE_KEYRING=/etc/apt/keyrings/nodejs-archive-keyring.gpg
 
-ARG ELASTIC_REPO=https://artifacts.elastic.co/packages/7.x/apt
+ARG ELASTIC_REPO=https://artifacts.elastic.co/packages/8.x/apt
 ARG ELASTIC_GPG_KEY=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 ARG ELASTIC_KEYRING=/etc/apt/keyrings/elasticsearch-archive-keyring.gpg
 
