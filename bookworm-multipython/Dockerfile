@@ -233,7 +233,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         RUSTC_WRAPPER=sccache \
         CARGO_INCREMENTAL=0 \
-      cargo install swh-graph swh-graph-grpc-server --all-features
+      cargo install swh-graph swh-graph-grpc-server --all-features --locked
 
 FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rust
 COPY --from=build_rust /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
