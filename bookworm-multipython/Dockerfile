@@ -164,10 +164,6 @@ RUN mkdir -p /home/${user}/.local/npm-packages && \
 ENV PATH "/home/${user}/.local/npm-packages/bin:${PATH}"
 
 
-# install emscripten required for generating tree-sitter WASM module in swh-search
-COPY --from=emscripten/emsdk:latest /emsdk /emsdk
-ENV PATH="/emsdk/upstream/emscripten:${PATH}"
-
 # install Azurite, a clone of Azure Blob Storage used for swh-objstorage tests
 RUN npm install -g azurite
 
