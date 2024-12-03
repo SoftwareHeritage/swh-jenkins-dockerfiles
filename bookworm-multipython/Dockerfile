@@ -60,13 +60,9 @@ ARG PGDG_REPO=https://apt.postgresql.org/pub/repos/apt
 ARG PGDG_GPG_KEY=https://www.postgresql.org/media/keys/ACCC4CF8.asc
 ARG PGDG_KEYRING=/etc/apt/keyrings/postgres-archive-keyring.gpg
 
-# ARG NODE_REPO=https://deb.nodesource.com/node_18.x
-# ARG NODE_GPG_KEY=https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
-# ARG NODE_KEYRING=/etc/apt/keyrings/nodejs-archive-keyring.gpg
-
-ARG YARN_REPO=https://dl.yarnpkg.com/debian/
-ARG YARN_GPG_KEY=https://dl.yarnpkg.com/debian/pubkey.gpg
-ARG YARN_KEYRING=/etc/apt/keyrings/yarnpkg-archive-keyring.gpg
+ARG NODE_REPO=https://deb.nodesource.com/node_20.x
+ARG NODE_GPG_KEY=https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+ARG NODE_KEYRING=/etc/apt/keyrings/nodejs-archive-keyring.gpg
 
 ARG ELASTIC_REPO=https://artifacts.elastic.co/packages/7.x/apt
 ARG ELASTIC_GPG_KEY=https://artifacts.elastic.co/GPG-KEY-elasticsearch
@@ -81,12 +77,9 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   echo "deb [signed-by=${PGDG_KEYRING}] ${PGDG_REPO} bookworm-pgdg main" \
     > /etc/apt/sources.list.d/postgres.list && \
   curl -fsSL ${PGDG_GPG_KEY} | gpg --dearmor > ${PGDG_KEYRING} && \
-  # echo "deb [signed-by=${NODE_KEYRING}] ${NODE_REPO} nodistro main" \
-  #   > /etc/apt/sources.list.d/nodejs.list && \
-  # curl -fsSL ${NODE_GPG_KEY} | gpg --dearmor > ${NODE_KEYRING} && \
-  echo "deb [signed-by=${YARN_KEYRING}] ${YARN_REPO} stable main" \
-    > /etc/apt/sources.list.d/yarnpkg.list && \
-  curl -fsSL ${YARN_GPG_KEY} | gpg --dearmor > ${YARN_KEYRING} && \
+  echo "deb [signed-by=${NODE_KEYRING}] ${NODE_REPO} nodistro main" \
+    > /etc/apt/sources.list.d/nodejs.list && \
+  curl -fsSL ${NODE_GPG_KEY} | gpg --dearmor > ${NODE_KEYRING} && \
   echo "deb [signed-by=${ELASTIC_KEYRING}] ${ELASTIC_REPO} stable main" \
     > /etc/apt/sources.list.d/elastic-7.x.list && \
   curl -fsSL ${ELASTIC_GPG_KEY} | gpg --dearmor > ${ELASTIC_KEYRING} && \
@@ -129,7 +122,6 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   maven \
   mercurial \
   myrepos \
-  npm \
   nodejs \
   pkg-config \
   postgresql-15 \
@@ -146,7 +138,6 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   subversion \
   tree \
   valgrind \
-  yarn \
   zlib1g-dev \
   zstd
 
@@ -158,12 +149,18 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 # Install rsvndump from swh registry (needed for swh-loader-svn)
 COPY --from=container-registry.softwareheritage.org/swh/infra/swh-apps/rsvndump-base:latest /usr/local/bin/rsvndump /usr/local/bin/rsvndump
 
+# Install corepack tool from nodejs to get yarn package manager
+RUN corepack enable
+
 USER ${user}
 WORKDIR /home/${user}
 
 ENV LANG C.UTF-8
 
 ENV PATH "/home/${user}/.local/bin:${PATH}"
+
+# Install yarn package manager for jenkins user
+RUN yes | yarn
 
 # Prepare npm package prefix
 RUN mkdir -p /home/${user}/.local/npm-packages && \
@@ -348,7 +345,7 @@ RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
 
-RUN mkdir /home/${user}/.cache
+RUN mkdir -p /home/${user}/.cache
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
