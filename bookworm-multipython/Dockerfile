@@ -90,7 +90,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   echo "deb [signed-by=${ELASTIC_KEYRING}] ${ELASTIC_REPO} stable main" \
     > /etc/apt/sources.list.d/elastic-7.x.list && \
   curl -fsSL ${ELASTIC_GPG_KEY} | gpg --dearmor > ${ELASTIC_KEYRING} && \
-  echo "deb [signed-by=${CASSANDRA_KEYRING}] ${CASSANDRA_REPO} 40x main" \
+  echo "deb [signed-by=${CASSANDRA_KEYRING}] ${CASSANDRA_REPO} 50x main" \
     > /etc/apt/sources.list.d/cassandra.list && \
   curl -fsSL ${CASSANDRA_GPG_KEY} | gpg --dearmor > ${CASSANDRA_KEYRING} && \
   apt-get update && \
