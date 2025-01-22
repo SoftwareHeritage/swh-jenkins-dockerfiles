@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM debian:bookworm-slim as build_bookworm_base
+FROM debian:bookworm-slim AS build_bookworm_base
 
 USER root
 
@@ -209,7 +209,7 @@ ENV PATH="${CARGO_HOME}/bin:${PATH}"
 
 COPY ./prepare-cargo-cache ${CARGO_HOME}/bin
 
-FROM build_bookworm_with_packages as build_rust
+FROM build_bookworm_with_packages AS build_rust
 
 # install rage (for swh-alter)
 # Use the latest available version so we can detect if rage behavior has changed when
@@ -291,7 +291,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         MAKEOPTS='-j8' \
       pyenv install --verbose --keep ${py39_version}
 
-FROM build_pyenv as build_py310
+FROM build_pyenv AS build_py310
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
@@ -299,7 +299,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         MAKEOPTS='-j8' \
       pyenv install --verbose --keep ${py310_version}
 
-FROM build_pyenv as build_py311
+FROM build_pyenv AS build_py311
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
@@ -307,7 +307,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         MAKEOPTS='-j8' \
       pyenv install --verbose --keep ${py311_version}
 
-FROM build_pyenv as build_py312
+FROM build_pyenv AS build_py312
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \

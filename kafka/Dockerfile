@@ -1,5 +1,5 @@
 ARG REGISTRY=swh-jenkins
-FROM $REGISTRY/tox as kafka_fetcher
+FROM $REGISTRY/tox AS kafka_fetcher
 
 # retrieve and uncompress kafka application, checking it's the
 # expected archive we retrieve
