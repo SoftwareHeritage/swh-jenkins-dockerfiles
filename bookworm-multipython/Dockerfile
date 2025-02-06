@@ -141,11 +141,6 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   zlib1g-dev \
   zstd
 
-# Install openjdk 11 from eclipse-temurin (needed for cassandra)
-ENV JAVA_HOME=/opt/java/openjdk
-COPY --from=eclipse-temurin:11 $JAVA_HOME $JAVA_HOME
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
 # Install rsvndump from swh registry (needed for swh-loader-svn)
 COPY --from=container-registry.softwareheritage.org/swh/infra/swh-apps/rsvndump-base:latest /usr/local/bin/rsvndump /usr/local/bin/rsvndump
 
