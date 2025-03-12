@@ -184,7 +184,7 @@ ENV RUSTUP_HOME="/home/${user}/.rustup"
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh && \
   chmod +x /tmp/rustup-init.sh && \
-  /tmp/rustup-init.sh -y && \
+  /tmp/rustup-init.sh -y --profile minimal && \
   rm /tmp/rustup-init.sh
 
 ENV PATH="${CARGO_HOME}/bin:${PATH}"
