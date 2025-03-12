@@ -255,7 +255,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
-      pyenv install --verbose --keep ${py37_version}
+      pyenv install --verbose ${py37_version}
 
 FROM build_pyenv AS build_py38
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
@@ -263,7 +263,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
-      pyenv install --verbose --keep ${py38_version}
+      pyenv install --verbose ${py38_version}
 
 FROM build_pyenv AS build_py39
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
@@ -271,7 +271,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
-      pyenv install --verbose --keep ${py39_version}
+      pyenv install --verbose ${py39_version}
 
 FROM build_pyenv AS build_py310
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
@@ -279,7 +279,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
-      pyenv install --verbose --keep ${py310_version}
+      pyenv install --verbose ${py310_version}
 
 FROM build_pyenv AS build_py311
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
@@ -287,7 +287,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
-      pyenv install --verbose --keep ${py311_version}
+      pyenv install --verbose ${py311_version}
 
 FROM build_pyenv AS build_py312
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
@@ -295,7 +295,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     env-from-secrets \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
-      pyenv install --verbose --keep ${py312_version}
+      pyenv install --verbose ${py312_version}
 
 FROM build_bookworm_with_packages_and_rust
 
@@ -305,22 +305,16 @@ ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
 COPY --from=build_pyenv --chown=jenkins:jenkins ${PYENV_ROOT} ${PYENV_ROOT}
 
 COPY --from=build_py37 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py37_version} ${PYENV_ROOT}/versions/${py37_version}
-COPY --from=build_py37 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py37_version} ${PYENV_ROOT}/sources/${py37_version}
 
 COPY --from=build_py38 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py38_version} ${PYENV_ROOT}/versions/${py38_version}
-COPY --from=build_py38 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py38_version} ${PYENV_ROOT}/sources/${py38_version}
 
 COPY --from=build_py39 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py39_version} ${PYENV_ROOT}/versions/${py39_version}
-COPY --from=build_py39 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py39_version} ${PYENV_ROOT}/sources/${py39_version}
 
 COPY --from=build_py310 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py310_version} ${PYENV_ROOT}/versions/${py310_version}
-COPY --from=build_py310 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py310_version} ${PYENV_ROOT}/sources/${py310_version}
 
 COPY --from=build_py311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py311_version} ${PYENV_ROOT}/versions/${py311_version}
-COPY --from=build_py311 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py311_version} ${PYENV_ROOT}/sources/${py311_version}
 
 COPY --from=build_py312 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py312_version} ${PYENV_ROOT}/versions/${py312_version}
-COPY --from=build_py312 --chown=jenkins:jenkins ${PYENV_ROOT}/sources/${py312_version} ${PYENV_ROOT}/sources/${py312_version}
 
 RUN pyenv rehash
 RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version}
