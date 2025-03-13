@@ -218,7 +218,7 @@ FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rust
 COPY --from=build_rust /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
 COPY --from=build_rust /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/bin
 
-RUN rustup component add clippy
+RUN rustup component add clippy rustfmt
 
 # install pyenv
 
