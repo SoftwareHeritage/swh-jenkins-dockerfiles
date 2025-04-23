@@ -9,13 +9,15 @@ ARG uid=115
 ARG gid=120
 ARG docker_gid=999
 
-ARG py37_version=3.7.16
-ARG py38_version=3.8.19
-ARG py39_version=3.9.19
-ARG py310_version=3.10.14
-ARG py311_version=3.11.9
-ARG py312_version=3.12.5
-ARG pypy310_version=pypy3.10-7.3.17
+ARG py37_version=3.7.17
+ARG py38_version=3.8.20
+ARG py39_version=3.9.22
+ARG py310_version=3.10.17
+ARG py311_version=3.11.12
+ARG py312_version=3.12.10
+ARG py313_version=3.13.3
+ARG pypy310_version=pypy3.10-7.3.19
+ARG pypy311_version=pypy3.11-7.3.19
 
 RUN groupadd -g ${gid} ${group}
 RUN groupadd -g ${docker_gid} docker
@@ -298,6 +300,14 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         MAKEOPTS='-j8' \
       pyenv install --verbose ${py312_version}
 
+FROM build_pyenv AS build_py313
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose ${py313_version}
+
 FROM build_pyenv AS build_pypy310
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
@@ -305,6 +315,14 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         PYTHON_CONFIGURE_OPTS='--with-lto' \
         MAKEOPTS='-j8' \
       pyenv install --verbose ${pypy310_version}
+
+FROM build_pyenv AS build_pypy311
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        PYTHON_CONFIGURE_OPTS='--with-lto' \
+        MAKEOPTS='-j8' \
+      pyenv install --verbose ${pypy311_version}
 
 FROM build_bookworm_with_packages_and_rust
 
@@ -325,10 +343,14 @@ COPY --from=build_py311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py311_v
 
 COPY --from=build_py312 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py312_version} ${PYENV_ROOT}/versions/${py312_version}
 
+COPY --from=build_py313 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py313_version} ${PYENV_ROOT}/versions/${py313_version}
+
 COPY --from=build_pypy310 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${pypy310_version} ${PYENV_ROOT}/versions/${pypy310_version}
 
+COPY --from=build_pypy311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${pypy311_version} ${PYENV_ROOT}/versions/${pypy311_version}
+
 RUN pyenv rehash
-RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version} ${pypy310_version}
+RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version} ${py313_version} ${pypy310_version} ${pypy311_version}
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
 
