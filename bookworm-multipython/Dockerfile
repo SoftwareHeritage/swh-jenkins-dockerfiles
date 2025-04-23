@@ -19,6 +19,8 @@ ARG py313_version=3.13.3
 ARG pypy310_version=pypy3.10-7.3.19
 ARG pypy311_version=pypy3.11-7.3.19
 
+# the uv version is hardcoded in a --from below
+
 RUN groupadd -g ${gid} ${group}
 RUN groupadd -g ${docker_gid} docker
 RUN useradd -c "Jenkins user" -d /home/${user} -u ${uid} -g ${gid} -m ${user}
@@ -353,6 +355,8 @@ RUN pyenv rehash
 RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version} ${py313_version} ${pypy310_version} ${pypy311_version}
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
+
+COPY --from=ghcr.io/astral-sh/uv:0.6.16 /uv /uvx /home/${user}/.local/bin/
 
 RUN mkdir -p /home/${user}/.cache
 
