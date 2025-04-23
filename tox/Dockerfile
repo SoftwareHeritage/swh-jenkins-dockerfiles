@@ -24,6 +24,7 @@ RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
     pylint \
     setuptools \
     tox \
+    tox-uv \
     twine \
     wheel \
   && ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m virtualenv --upgrade-embed-wheels
