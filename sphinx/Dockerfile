@@ -30,4 +30,4 @@ RUN \
 USER jenkins
 
 RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
-    pre-commit tox
+    pre-commit tox tox-uv
