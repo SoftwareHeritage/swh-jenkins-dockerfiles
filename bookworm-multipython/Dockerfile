@@ -9,8 +9,6 @@ ARG uid=115
 ARG gid=120
 ARG docker_gid=999
 
-ARG py37_version=3.7.17
-ARG py38_version=3.8.20
 ARG py39_version=3.9.22
 ARG py310_version=3.10.17
 ARG py311_version=3.11.12
@@ -254,22 +252,6 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && cd ~/.pyenv && src/
 ENV PYENV_ROOT "/home/${user}/.pyenv"
 ENV PATH="${PATH}:/home/${user}/.pyenv/bin"
 
-FROM build_pyenv AS build_py37
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${py37_version}
-
-FROM build_pyenv AS build_py38
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${py38_version}
-
 FROM build_pyenv AS build_py39
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
@@ -333,10 +315,6 @@ ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
 
 COPY --from=build_pyenv --chown=jenkins:jenkins ${PYENV_ROOT} ${PYENV_ROOT}
 
-COPY --from=build_py37 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py37_version} ${PYENV_ROOT}/versions/${py37_version}
-
-COPY --from=build_py38 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py38_version} ${PYENV_ROOT}/versions/${py38_version}
-
 COPY --from=build_py39 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py39_version} ${PYENV_ROOT}/versions/${py39_version}
 
 COPY --from=build_py310 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py310_version} ${PYENV_ROOT}/versions/${py310_version}
@@ -352,7 +330,7 @@ COPY --from=build_pypy310 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${pypy3
 COPY --from=build_pypy311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${pypy311_version} ${PYENV_ROOT}/versions/${pypy311_version}
 
 RUN pyenv rehash
-RUN pyenv global ${py37_version} ${py38_version} ${py39_version} ${py310_version} ${py311_version} ${py312_version} ${py313_version} ${pypy310_version} ${pypy311_version}
+RUN pyenv global ${py39_version} ${py310_version} ${py311_version} ${py312_version} ${py313_version} ${pypy310_version} ${pypy311_version}
 
 ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
 
