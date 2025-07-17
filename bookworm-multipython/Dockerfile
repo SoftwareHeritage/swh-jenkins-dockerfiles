@@ -223,6 +223,13 @@ COPY --from=build_rust /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/
 
 RUN rustup component add clippy rustfmt
 
+# install minimal supported rust version and nightly one to run swh packages tests with them
+ARG RUST_MIN_VERSION=1.83
+RUN rustup install --profile minimal ${RUST_MIN_VERSION} && \
+  rustup component add --toolchain ${RUST_MIN_VERSION}-x86_64-unknown-linux-gnu clippy && \
+  rustup install --profile minimal nightly && \
+  rustup component add --toolchain nightly-x86_64-unknown-linux-gnu clippy
+
 # install pyenv
 
 FROM build_bookworm_base AS build_pyenv
