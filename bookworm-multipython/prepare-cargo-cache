@@ -11,5 +11,5 @@ for dir in registry/index/ registry/cache/ git/db/; do
     mkdir -p "${HOME}/.cargo/$base"
     mkdir -p "${HOME}/.cache/cargo/$dir"
     rm -rf "${HOME}/.cargo/${dir#/}"
-    ln -s "${HOME}/.cache/cargo/$dir" "${HOME}/.cargo/$base/"
+    ln -sf "${HOME}/.cache/cargo/$dir" "${HOME}/.cargo/$base/"
 done
