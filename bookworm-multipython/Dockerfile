@@ -109,6 +109,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   jq \
   lcov \
   libcapture-tiny-perl \
+  libclang-dev \
   libcmph-dev \
   libdatetime-perl \
   libfuse3-dev \
