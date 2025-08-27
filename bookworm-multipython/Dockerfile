@@ -114,6 +114,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   libdatetime-perl \
   libfuse3-dev \
   libgtest-dev \
+  libleveldb-dev \
   liblz4-dev \
   libmagic-dev \
   libprotobuf-dev \
