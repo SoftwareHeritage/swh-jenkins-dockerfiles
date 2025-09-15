@@ -42,7 +42,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
 
 # Install sccache and hard link gcc and g++ to it so that sccache is used for C(++)
 # builds implicitly
-ARG sccache_version=0.8.1
+ARG sccache_version=0.10.0
 RUN cd /usr/local/bin && \
     curl -sSfL https://github.com/mozilla/sccache/releases/download/v${sccache_version}/sccache-v${sccache_version}-x86_64-unknown-linux-musl.tar.gz | \
     tar --strip-components=1 -xz sccache-v${sccache_version}-x86_64-unknown-linux-musl/sccache && \
