@@ -196,44 +196,6 @@ ENV PATH="${CARGO_HOME}/bin:${PATH}"
 
 COPY ./prepare-cargo-cache ${CARGO_HOME}/bin
 
-FROM build_bookworm_with_packages AS build_rust
-
-# install rage (for swh-alter)
-# Use the latest available version so we can detect if rage behavior has changed when
-# testing swh-alter. Otherwise, this might only be detected when processing a
-# takedown notice or restoring a bundle… which would not be a nice experience.
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        RUSTC_WRAPPER=sccache \
-        CARGO_INCREMENTAL=0 \
-      cargo install rage
-
-# Install rust-based swh-graph binaries to avoid compiling it on all test runs
-# of its dependencies (e.g. swh-provenance)
-
-ARG swh_graph_version=12.1.2
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        RUSTC_WRAPPER=sccache \
-        CARGO_INCREMENTAL=0 \
-      cargo install swh-graph@${swh_graph_version} \
-        swh-graph-grpc-server@${swh_graph_version} --all-features --locked
-
-FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rust
-COPY --from=build_rust /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
-COPY --from=build_rust /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/bin
-
-RUN rustup component add clippy rustfmt
-
-# install minimal supported rust version and nightly one to run swh packages tests with them
-ARG RUST_MIN_VERSION=1.85
-RUN rustup install --profile minimal ${RUST_MIN_VERSION} && \
-  rustup component add --toolchain ${RUST_MIN_VERSION}-x86_64-unknown-linux-gnu clippy rustfmt && \
-  rustup install --profile minimal nightly && \
-  rustup component add --toolchain nightly-x86_64-unknown-linux-gnu clippy rustfmt
-
 # install pyenv
 
 FROM build_bookworm_base AS build_pyenv
@@ -319,7 +281,43 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
         MAKEOPTS='-j8' \
       pyenv install --verbose ${pypy311_version}
 
-FROM build_bookworm_with_packages_and_rust
+FROM build_bookworm_with_packages AS build_rust
+
+# install rage (for swh-alter)
+# Use the latest available version so we can detect if rage behavior has changed when
+# testing swh-alter. Otherwise, this might only be detected when processing a
+# takedown notice or restoring a bundle… which would not be a nice experience.
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        RUSTC_WRAPPER=sccache \
+        CARGO_INCREMENTAL=0 \
+      cargo install rage
+
+# Install rust-based swh-graph binaries to avoid compiling it on all test runs
+# of its dependencies (e.g. swh-provenance)
+
+ARG swh_graph_version=12.1.2
+RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
+    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
+    env-from-secrets \
+        RUSTC_WRAPPER=sccache \
+        CARGO_INCREMENTAL=0 \
+      cargo install swh-graph@${swh_graph_version} \
+        swh-graph-grpc-server@${swh_graph_version} --all-features --locked
+
+FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rust
+COPY --from=build_rust /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
+COPY --from=build_rust /home/${user}/.cargo/bin/swh-graph* /home/${user}/.cargo/bin
+
+RUN rustup component add clippy rustfmt
+
+# install minimal supported rust version and nightly one to run swh packages tests with them
+ARG RUST_MIN_VERSION=1.85
+RUN rustup install --profile minimal ${RUST_MIN_VERSION} && \
+  rustup component add --toolchain ${RUST_MIN_VERSION}-x86_64-unknown-linux-gnu clippy rustfmt && \
+  rustup install --profile minimal nightly && \
+  rustup component add --toolchain nightly-x86_64-unknown-linux-gnu clippy rustfmt
 
 ENV PYENV_ROOT "/home/${user}/.pyenv"
 ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
