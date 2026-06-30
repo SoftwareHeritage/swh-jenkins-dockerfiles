@@ -212,12 +212,14 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
 # Install rust-based swh-graph binaries to avoid compiling it on all test runs
 # of its dependencies (e.g. swh-provenance)
 
+ARG swh_graph_version=12.1.2
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
         RUSTC_WRAPPER=sccache \
         CARGO_INCREMENTAL=0 \
-      cargo install swh-graph swh-graph-grpc-server --all-features --locked
+      cargo install swh-graph@${swh_graph_version} \
+        swh-graph-grpc-server@${swh_graph_version} --all-features --locked
 
 FROM build_bookworm_with_packages AS build_bookworm_with_packages_and_rust
 COPY --from=build_rust /home/${user}/.cargo/bin/rage /home/${user}/.cargo/bin/rage-keygen /home/${user}/.cargo/bin
