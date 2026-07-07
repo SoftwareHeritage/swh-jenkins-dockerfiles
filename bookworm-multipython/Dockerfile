@@ -9,11 +9,11 @@ ARG uid=115
 ARG gid=120
 ARG docker_gid=999
 
-ARG py311_version=3.11.12
-ARG py312_version=3.12.10
-ARG py313_version=3.13.3
+ARG py311_version=3.11.15
+ARG py312_version=3.12.13
+ARG py313_version=3.13.14
 ARG py314_version=3.14.6
-ARG pypy311_version=pypy3.11-7.3.19
+ARG pypy311_version=pypy3.11-7.3.22
 
 # the uv version is hardcoded in a --from below
 
