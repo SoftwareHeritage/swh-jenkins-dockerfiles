@@ -1,6 +1,6 @@
 FROM cypress/base:latest
 
-RUN apt update && apt install -y \
+RUN apt update && apt -y dist-upgrade && apt install -y \
     python3-pip \
     python3-venv \
     libpq-dev \
