@@ -307,14 +307,19 @@ ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
 COPY --from=build_pyenv --chown=jenkins:jenkins ${PYENV_ROOT} ${PYENV_ROOT}
 
 COPY --from=build_py311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py311_version} ${PYENV_ROOT}/versions/${py311_version}
+RUN cd ${PYENV_ROOT}/versions/${py311_version}/lib/python3.11 && rm -rf test config-3.11-x86_64-linux-gnu
 
 COPY --from=build_py312 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py312_version} ${PYENV_ROOT}/versions/${py312_version}
+RUN cd ${PYENV_ROOT}/versions/${py312_version}/lib/python3.12 && rm -rf test config-3.12-x86_64-linux-gnu
 
 COPY --from=build_py313 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py313_version} ${PYENV_ROOT}/versions/${py313_version}
+RUN cd ${PYENV_ROOT}/versions/${py313_version}/lib/python3.13 && rm -rf test config-3.13-x86_64-linux-gnu
 
 COPY --from=build_py314 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py314_version} ${PYENV_ROOT}/versions/${py314_version}
+RUN cd ${PYENV_ROOT}/versions/${py314_version}/lib/python3.14 && rm -rf test config-3.14-x86_64-linux-gnu
 
 COPY --from=build_pypy311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${pypy311_version} ${PYENV_ROOT}/versions/${pypy311_version}
+RUN cd ${PYENV_ROOT}/versions/${pypy311_version}/lib/pypy3.11 && rm -rf test
 
 RUN pyenv rehash
 RUN pyenv global ${py311_version} ${py312_version} ${py313_version} ${py314_version} ${pypy311_version}
