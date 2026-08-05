@@ -118,8 +118,10 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   libprotobuf-dev \
   libprotoc-dev \
   libsnappy-dev \
+  libsqlite3-dev \
   libsvn-dev \
   libsystemd-dev \
+  libutf8proc-dev \
   libzstd-dev \
   lzip \
   maven \
@@ -150,6 +152,11 @@ COPY --from=container-registry.softwareheritage.org/swh/infra/swh-apps/rsvndump-
 
 # Install corepack tool from nodejs to get yarn package manager
 RUN corepack enable
+
+# Work around https://bugs.debian.org/1055242 so that we can compile upstream
+# version of subvertpy
+RUN bash -c 'svnversion=$(svn --version | grep -oP "svn, version \K\d+\.\d+\.\d+") && \
+  sed -i "s/^Version: *$/Version: $svnversion/" /usr/lib/*/pkgconfig/libsvn_*.pc'
 
 USER ${user}
 WORKDIR /home/${user}
