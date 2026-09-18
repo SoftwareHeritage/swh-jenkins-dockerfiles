@@ -8,7 +8,8 @@ RUN apt update && apt -y dist-upgrade && apt install -y \
     wait-for-it \
     pkg-config \
     libsystemd-dev \
-    libleveldb-dev
+    libleveldb-dev \
+    chromium
 
 ARG user=jenkins
 ARG group=jenkins
