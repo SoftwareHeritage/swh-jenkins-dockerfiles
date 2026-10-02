@@ -225,11 +225,13 @@ RUN apt-get -y install \
     libffi-dev \
     liblzma-dev \
     # pypy build dependencies
-    llvm
+    llvm \
+    unzip
 
 USER ${user}
 
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && cd ~/.pyenv && src/configure && make -C src
+RUN cd /tmp && curl -LO https://github.com/pyenv/pyenv/archive/refs/heads/master.zip && \
+  unzip -q master.zip && mv pyenv-master ~/.pyenv && cd ~/.pyenv && src/configure && make -C src
 ENV PYENV_ROOT "/home/${user}/.pyenv"
 ENV PATH="${PATH}:/home/${user}/.pyenv/bin"
 
