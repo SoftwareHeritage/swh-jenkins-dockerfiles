@@ -85,7 +85,7 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
     > /etc/apt/sources.list.d/nodejs.list && \
   curl -fsSL ${NODE_GPG_KEY} | gpg --dearmor > ${NODE_KEYRING} && \
   echo "deb [signed-by=${ELASTIC_KEYRING}] ${ELASTIC_REPO} stable main" \
-    > /etc/apt/sources.list.d/elastic-7.x.list && \
+    > /etc/apt/sources.list.d/elastic-8.x.list && \
   curl -fsSL ${ELASTIC_GPG_KEY} | gpg --dearmor > ${ELASTIC_KEYRING} && \
   echo "deb [signed-by=${CASSANDRA_KEYRING}] ${CASSANDRA_REPO} 50x main" \
     > /etc/apt/sources.list.d/cassandra.list && \
