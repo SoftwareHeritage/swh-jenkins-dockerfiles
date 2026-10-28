@@ -291,7 +291,7 @@ RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
 # Install rust-based swh-graph binaries to avoid compiling it on all test runs
 # of its dependencies (e.g. swh-provenance)
 
-ARG swh_graph_version=12.1.2
+ARG swh_graph_version=13.0.1
 RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
     --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
     env-from-secrets \
