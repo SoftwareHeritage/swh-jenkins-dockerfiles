@@ -9,7 +9,8 @@ RUN apt update && apt -y dist-upgrade && apt install -y \
     pkg-config \
     libsystemd-dev \
     libleveldb-dev \
-    chromium
+    chromium \
+    node-corepack
 
 ARG user=jenkins
 ARG group=jenkins
@@ -18,5 +19,6 @@ ARG gid=120
 
 RUN groupadd -g ${gid} ${group}
 RUN useradd -c "Jenkins user" -d /home/${user} -u ${uid} -g ${gid} -m ${user}
+RUN corepack enable
 
 USER ${user}
