@@ -179,6 +179,8 @@ ENV PATH "/home/${user}/.local/npm-packages/bin:${PATH}"
 
 # install Azurite, a clone of Azure Blob Storage used for swh-objstorage tests
 RUN npm install -g azurite
+# install Garage, a S3-like server used for swh-objstorage tests
+RUN wget https://garagehq.deuxfleurs.fr/_releases/v2.5.0/x86_64-unknown-linux-musl/garage -O /usr/local/bin/garage
 
 # install sentry CLI
 RUN mkdir -p /home/${user}/.local/bin && \
