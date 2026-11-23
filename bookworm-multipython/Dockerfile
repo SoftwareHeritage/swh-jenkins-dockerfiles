@@ -9,11 +9,11 @@ ARG uid=115
 ARG gid=120
 ARG docker_gid=999
 
-ARG py311_version=3.11.15
-ARG py312_version=3.12.13
-ARG py313_version=3.13.14
-ARG py314_version=3.14.6
-ARG pypy311_version=pypy3.11-7.3.22
+ARG py311_version=3.11.18
+ARG py312_version=3.12.16
+ARG py313_version=3.13.18
+ARG py314_version=3.14.10
+ARG pypy311_version=pypy3.11.17
 
 # the uv version is hardcoded in a --from below
 
@@ -164,9 +164,7 @@ RUN bash -c 'svnversion=$(svn --version | grep -oP "svn, version \K\d+\.\d+\.\d+
 USER ${user}
 WORKDIR /home/${user}
 
-ENV LANG C.UTF-8
-
-ENV PATH "/home/${user}/.local/bin:${PATH}"
+ENV LANG=C.UTF-8
 
 # Install yarn package manager for jenkins user
 RUN yes | yarn
@@ -174,7 +172,7 @@ RUN yes | yarn
 # Prepare npm package prefix
 RUN mkdir -p /home/${user}/.local/npm-packages && \
   npm config set prefix /home/${user}/.local/npm-packages
-ENV PATH "/home/${user}/.local/npm-packages/bin:${PATH}"
+ENV PATH="/home/${user}/.local/npm-packages/bin:${PATH}"
 
 
 # install Azurite, a clone of Azure Blob Storage used for swh-objstorage tests
@@ -203,77 +201,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-ini
 ENV PATH="${CARGO_HOME}/bin:${PATH}"
 
 COPY ./prepare-cargo-cache ${CARGO_HOME}/bin
-
-# install pyenv
-
-FROM build_bookworm_base AS build_pyenv
-
-USER root
-
-RUN apt-get -y install \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    curl \
-    libncursesw5-dev \
-    xz-utils \
-    tk-dev \
-    libxml2-dev \
-    libxmlsec1-dev \
-    libffi-dev \
-    liblzma-dev \
-    # pypy build dependencies
-    llvm \
-    unzip
-
-USER ${user}
-
-RUN cd /tmp && curl -LO https://github.com/pyenv/pyenv/archive/refs/heads/master.zip && \
-  unzip -q master.zip && mv pyenv-master ~/.pyenv && cd ~/.pyenv && src/configure && make -C src
-ENV PYENV_ROOT "/home/${user}/.pyenv"
-ENV PATH="${PATH}:/home/${user}/.pyenv/bin"
-
-FROM build_pyenv AS build_py311
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${py311_version}
-
-FROM build_pyenv AS build_py312
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${py312_version}
-
-FROM build_pyenv AS build_py313
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${py313_version}
-
-FROM build_pyenv AS build_py314
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${py314_version}
-
-FROM build_pyenv AS build_pypy311
-RUN --mount=type=secret,mode=0444,id=SCCACHE_REDIS_ENDPOINT \
-    --mount=type=secret,mode=0444,id=SCCACHE_REDIS_PASSWORD \
-    env-from-secrets \
-        PYTHON_CONFIGURE_OPTS='--with-lto' \
-        MAKEOPTS='-j8' \
-      pyenv install --verbose ${pypy311_version}
 
 FROM build_bookworm_with_packages AS build_rust
 
@@ -313,34 +240,23 @@ RUN rustup install --profile minimal ${RUST_MIN_VERSION} && \
   rustup install --profile minimal nightly && \
   rustup component add --toolchain nightly-x86_64-unknown-linux-gnu clippy rustfmt
 
-ENV PYENV_ROOT "/home/${user}/.pyenv"
-ENV PATH="${PYENV_ROOT}/shims:${PATH}:${PYENV_ROOT}/bin"
-
-COPY --from=build_pyenv --chown=jenkins:jenkins ${PYENV_ROOT} ${PYENV_ROOT}
-
-COPY --from=build_py311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py311_version} ${PYENV_ROOT}/versions/${py311_version}
-RUN cd ${PYENV_ROOT}/versions/${py311_version}/lib/python3.11 && rm -rf test config-3.11-x86_64-linux-gnu
-
-COPY --from=build_py312 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py312_version} ${PYENV_ROOT}/versions/${py312_version}
-RUN cd ${PYENV_ROOT}/versions/${py312_version}/lib/python3.12 && rm -rf test config-3.12-x86_64-linux-gnu
-
-COPY --from=build_py313 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py313_version} ${PYENV_ROOT}/versions/${py313_version}
-RUN cd ${PYENV_ROOT}/versions/${py313_version}/lib/python3.13 && rm -rf test config-3.13-x86_64-linux-gnu
-
-COPY --from=build_py314 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${py314_version} ${PYENV_ROOT}/versions/${py314_version}
-RUN cd ${PYENV_ROOT}/versions/${py314_version}/lib/python3.14 && rm -rf test config-3.14-x86_64-linux-gnu
-
-COPY --from=build_pypy311 --chown=jenkins:jenkins ${PYENV_ROOT}/versions/${pypy311_version} ${PYENV_ROOT}/versions/${pypy311_version}
-RUN cd ${PYENV_ROOT}/versions/${pypy311_version}/lib/pypy3.11 && rm -rf test
-
-RUN pyenv rehash
-RUN pyenv global ${py311_version} ${py312_version} ${py313_version} ${py314_version} ${pypy311_version}
-
-ENV SWH_PYTHON_FOR_GLOBAL_TOOLS python3.11
-
-COPY --from=ghcr.io/astral-sh/uv:0.6.16 /uv /uvx /home/${user}/.local/bin/
-
 RUN mkdir -p /home/${user}/.cache
+
+
+# install multiple Python versions with uv
+ENV PATH="/home/${user}/.local/bin:${PATH}"
+
+ENV SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS=3.11
+ENV SWH_PYTHON_FOR_GLOBAL_TOOLS=python3.11
+
+COPY --from=ghcr.io/astral-sh/uv:0.13.9 --chown=${user} /uv /uvx /home/${user}/.local/bin/
+
+RUN mkdir -p /home/${user}/.local/share/uv/python && \
+  uv python install ${py311_version} ${py312_version} ${py313_version} ${py314_version} ${pypy311_version}
+
+# create a virtualenv for the default Python version so tools like pre-commit can be installed
+RUN uv venv --seed -p ${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS} .venv${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS}
+ENV PATH="/home/${user}/.venv${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS}/bin:${PATH}"
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile

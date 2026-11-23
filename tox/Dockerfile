@@ -13,7 +13,7 @@ USER jenkins
 
 RUN mkdir -p /home/jenkins/.cache/pip
 
-RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
+RUN uv pip install -p ${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS} --upgrade \
     Radon \
     build \
     cibuildwheel \
@@ -27,4 +27,4 @@ RUN ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m pip install --user --upgrade \
     tox-uv \
     twine \
     wheel \
-  && ${SWH_PYTHON_FOR_GLOBAL_TOOLS} -m virtualenv --upgrade-embed-wheels
+  && uv run -p ${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS} virtualenv --upgrade-embed-wheels
