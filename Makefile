@@ -36,7 +36,8 @@ help:
 $(DEPENDS): $(DOCKERFILES)
 	grep '^FROM \$$REGISTRY/' $(DOCKERFILES) | \
 		awk -F '/Dockerfile:FROM \\$$REGISTRY/' '{ print $$1 " " $$2 }' | \
-		sed 's@[:/]@\\:@g' | awk '{ print "$(REGISTRY)/" $$1 ": " "$(REGISTRY)/" $$2 }' > $@
+		sed 's@[:/]@\\:@g' | awk '{ print "$(REGISTRY)/" $$1 ": " "$(REGISTRY)/" $$2 }' | \
+		sort | uniq > $@
 sinclude $(DEPENDS)
 
 $(NAMES): %: $(REGISTRY)/%
