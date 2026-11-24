@@ -32,7 +32,6 @@ help:
 	@echo "You can chain actions, typically in CI environment you want make checkrebuild push all"
 	@echo "which rebuild and push only images having updates availables."
 
-.PHONY: $(DEPENDS)
 $(DEPENDS): $(DOCKERFILES)
 	grep '^FROM \$$REGISTRY/' $(DOCKERFILES) | \
 		awk -F '/Dockerfile:FROM \\$$REGISTRY/' '{ print $$1 " " $$2 }' | \
