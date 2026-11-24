@@ -150,9 +150,6 @@ RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
   zlib1g-dev \
   zstd
 
-# Install rsvndump from swh registry (needed for swh-loader-svn)
-COPY --from=container-registry.softwareheritage.org/swh/infra/swh-apps/rsvndump-base:latest /usr/local/bin/rsvndump /usr/local/bin/rsvndump
-
 # Install corepack tool from nodejs to get yarn package manager
 RUN corepack enable
 
