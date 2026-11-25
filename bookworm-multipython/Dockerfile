@@ -251,9 +251,13 @@ COPY --from=ghcr.io/astral-sh/uv:0.13.9 --chown=${user} /uv /uvx /home/${user}/.
 RUN mkdir -p /home/${user}/.local/share/uv/python && \
   uv python install ${py311_version} ${py312_version} ${py313_version} ${py314_version} ${pypy311_version}
 
+# force uv to use the Python versions it manages, notably when using tox-uv
+ENV UV_PYTHON_PREFERENCE=only-managed
+
 # create a virtualenv for the default Python version so tools like pre-commit can be installed
-RUN uv venv --seed -p ${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS} .venv${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS}
+RUN uv venv --seed --python ${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS} .venv${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS}
 ENV PATH="/home/${user}/.venv${SWH_PYTHON_VERSION_FOR_GLOBAL_TOOLS}/bin:${PATH}"
+
 
 ## vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ##
 # inlined from https://raw.githubusercontent.com/jenkinsci/docker-agent/4.13.3-2/11/bullseye/Dockerfile
